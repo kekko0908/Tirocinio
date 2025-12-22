@@ -1,0 +1,90 @@
+{
+  "scene": "FloorPlan1",
+  "target": {
+    "objectId": "Apple|-00.47|+01.15|+00.48",
+    "objectType": "Apple"
+  },
+  "centroid": {
+    "x": 348,
+    "y": 254
+  },
+  "yolo": {
+    "model": "yolov8n-seg.pt",
+    "conf_select": 0.25,
+    "conf_predict": 0.05,
+    "imgsz": 640,
+    "requested_label": "apple",
+    "detected_label": "refrigerator",
+    "score": 0.3426176905632019,
+    "bbox_xyxy": [
+      190.17138671875,
+      117.08419799804688,
+      505.61041259765625,
+      387.15167236328125
+    ],
+    "has_mask": true,
+    "selected_reason": "best_score",
+    "detections": [
+      {
+        "label": "refrigerator",
+        "score": 0.3426176905632019,
+        "bbox_xyxy": [
+          190.17138671875,
+          117.08419799804688,
+          505.61041259765625,
+          387.15167236328125
+        ],
+        "centroid_px": [
+          348,
+          254
+        ],
+        "has_mask": true
+      },
+      {
+        "label": "suitcase",
+        "score": 0.12473953515291214,
+        "bbox_xyxy": [
+          0.07830810546875,
+          355.10638427734375,
+          132.19638061523438,
+          476.81390380859375
+        ],
+        "centroid_px": [
+          61,
+          413
+        ],
+        "has_mask": true
+      },
+      {
+        "label": "microwave",
+        "score": 0.10218749195337296,
+        "bbox_xyxy": [
+          0.3244476318359375,
+          355.2353515625,
+          131.6442413330078,
+          477.16552734375
+        ],
+        "centroid_px": [
+          62,
+          413
+        ],
+        "has_mask": true
+      },
+      {
+        "label": "tv",
+        "score": 0.06562550365924835,
+        "bbox_xyxy": [
+          0.214569091796875,
+          355.68988037109375,
+          133.01904296875,
+          479.02081298828125
+        ],
+        "centroid_px": [
+          61,
+          413
+        ],
+        "has_mask": true
+      }
+    ]
+  }
+}

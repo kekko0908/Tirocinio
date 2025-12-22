@@ -1,0 +1,26 @@
+{
+  "scene": "FloorPlan1",
+  "target": {
+    "objectId": "Apple|-00.47|+01.15|+00.48",
+    "objectType": "Apple"
+  },
+  "centroid_px": {
+    "x": 348,
+    "y": 254
+  },
+  "depth_m": 0.6847289800643921,
+  "camera": {
+    "position": {
+      "x": -1.0,
+      "y": 0.900999128818512,
+      "z": 1.0
+    },
+    "yaw_deg": 270.0,
+    "horizon_deg": 0.0
+  },
+  "pregrasp_world": {
+    "x": -1.684728980064392,
+    "y": 0.8710422515869141,
+    "z": 1.0599137544631958
+  }
+}

@@ -1,0 +1,182 @@
+import time
+import json
+import torch
+import cv2
+import math
+import numpy as np
+import re
+import random
+import sys
+import matplotlib.pyplot as plt
+from pathlib import Path
+from PIL import Image
+from ai2thor.controller import Controller
+from transformers import AutoProcessor, AutoModelForCausalLM
+
+# --- IMPORT YOLO ENGINE ---
+CURRENT_DIR = Path(__file__).resolve().parent
+sys.path.append(str(CURRENT_DIR))
+
+try:
+    from yolo_engine_17 import YoloSegEngine
+except ImportError:
+    print("[ERR] Manca yolo_engine_17.py")
+    sys.exit(1)
+
+# --- CONFIGURAZIONE ---
+ROOT = Path(__file__).resolve().parents[1]
+OUTPUT_DIR = ROOT / "data" / "Yolo_vs_VLM"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+TARGET_TYPE = "Apple"
+MODEL_ID_VLM = "google/gemma-3-4b-it"
+
+# --- UTILS GEOMETRICHE ---
+def dist_xz(p1, p2):
+    return math.sqrt((p1["x"] - p2["x"])**2 + (p1["z"] - p2["z"])**2)
+
+def teleport_near_target_random_yaw(controller, target_type):
+    print(f"[SETUP] Cerco {target_type}...")
+    objs = controller.last_event.metadata["objects"]
+    target = next((o for o in objs if o["objectType"] == target_type), None)
+    if not target: return False, None
+    center = target["axisAlignedBoundingBox"]["center"]
+    controller.step("GetReachablePositions")
+    reachable = controller.last_event.metadata.get("actionReturn", [])
+    candidates = [p for p in reachable if 0.4 < dist_xz(p, center) < 0.75]
+    if not candidates: best_pos = min(reachable, key=lambda p: dist_xz(p, center))
+    else: best_pos = random.choice(candidates)
+    
+    print(f"[SETUP] Teleport a {dist_xz(best_pos, center):.2f}m dal target.")
+    controller.step(action="TeleportFull", x=best_pos["x"], y=best_pos["y"], z=best_pos["z"], rotation={"x":0,"y":random.uniform(0,360),"z":0}, horizon=30.0, standing=True)
+    return True, target["objectId"]
+
+def find_and_center_target(controller, target_id):
+    print("[SEARCH] Ricerca oggetto...")
+    for _ in range(12): 
+        if target_id in controller.last_event.instance_masks: break
+        controller.step(action="RotateRight", degrees=30)
+    
+    if target_id not in controller.last_event.instance_masks: return False
+
+    print("[CENTER] Centramento...")
+    for _ in range(15):
+        if target_id not in controller.last_event.instance_masks:
+            controller.step("RotateLeft", degrees=10); continue
+        mask = controller.last_event.instance_masks[target_id]
+        cols = np.where(mask)[1]
+        if len(cols) == 0: continue
+        cx = int(np.mean(cols))
+        if abs(cx - 320) < 30: return True
+        deg = 5 if abs(cx - 320) < 50 else 10
+        action = "RotateLeft" if cx < 320 else "RotateRight"
+        controller.step(action, degrees=deg)
+    return True 
+
+def compute_iou(boxA, boxB):
+    xA = max(boxA[0], boxB[0]); yA = max(boxA[1], boxB[1])
+    xB = min(boxA[2], boxB[2]); yB = min(boxA[3], boxB[3])
+    inter = max(0, xB - xA) * max(0, yB - yA)
+    boxAArea = (boxA[2] - boxA[0]) * (boxA[3] - boxA[1])
+    boxBArea = (boxB[2] - boxB[0]) * (boxB[3] - boxB[1])
+    if float(boxAArea + boxBArea - inter) == 0: return 0.0
+    return inter / float(boxAArea + boxBArea - inter)
+
+def draw_box(img, box, color, label):
+    x1, y1, x2, y2 = map(int, box)
+    cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+    cv2.putText(img, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+# --- VLM ---
+class VLM_Predictor:
+    def __init__(self):
+        try:
+            self.processor = AutoProcessor.from_pretrained(MODEL_ID_VLM, token=True, use_fast=True)
+            self.model = AutoModelForCausalLM.from_pretrained(MODEL_ID_VLM, token=True, torch_dtype=torch.bfloat16, device_map="auto")
+            self.active = True
+        except: self.active = False
+    def predict(self, image_rgb, width, height):
+        if not self.active: return None
+        pil_img = Image.fromarray(image_rgb)
+        prompt = "Detect 'Apple'. Return [ymin, xmin, ymax, xmax] 0-1000."
+        messages = [{"role": "user", "content": [{"type": "image"}, {"type": "text", "text": prompt}]}]
+        inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, return_dict=True)
+        inputs = self.processor(text=inputs, images=pil_img, return_tensors="pt").to(self.model.device)
+        with torch.no_grad(): out = self.model.generate(**inputs, max_new_tokens=200)
+        decoded = self.processor.decode(out[0], skip_special_tokens=True)
+        try:
+            match = re.search(r"\[(\d+),\s*(\d+),\s*(\d+),\s*(\d+)\]", decoded)
+            if match:
+                y1, x1, y2, x2 = map(int, match.groups())
+                return [(x1/1000)*width, (y1/1000)*height, (x2/1000)*width, (y2/1000)*height]
+        except: pass
+        return None
+
+# --- MAIN ---
+def main():
+    print("[INIT] Controller...")
+    controller = Controller(scene="FloorPlan1", agentMode="default", width=640, height=480, renderInstanceSegmentation=True)
+    
+    # 1. SETUP
+    success, target_id = teleport_near_target_random_yaw(controller, TARGET_TYPE)
+    if not success: controller.stop(); return
+    if not find_and_center_target(controller, target_id): controller.stop(); return
+    
+    time.sleep(0.5)
+    event = controller.last_event
+    rgb = event.frame # RGB
+    h, w, _ = rgb.shape
+    
+    # --- SALVATAGGIO FRAME PULITO PER YOLO ---
+    # Convertiamo RGB -> BGR per salvarlo correttamente con OpenCV
+    clean_bgr = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+    clean_img_path = OUTPUT_DIR / "temp_yolo_input.png"
+    cv2.imwrite(str(clean_img_path), clean_bgr)
+    print(f"[INFO] Frame pulito salvato per YOLO: {clean_img_path}")
+
+    # 2. GT
+    mask = event.instance_masks.get(target_id)
+    if mask is None: controller.stop(); return
+    rows, cols = np.where(mask)
+    gt_box = [float(np.min(cols)), float(np.min(rows)), float(np.max(cols)), float(np.max(rows))]
+
+    # 3. TEST VLM (Usa RGB in memoria)
+    print("\n[TEST] VLM...")
+    vlm = VLM_Predictor()
+    t0 = time.time(); vlm_box = vlm.predict(rgb, w, h); vlm_time = time.time() - t0
+    
+    # 4. TEST YOLO (Usa FILE su disco)
+    print("\n[TEST] YOLO (from file)...")
+    yolo_engine = YoloSegEngine() 
+    t0 = time.time()
+    # Passiamo il PERCORSO del file, così YOLO se lo carica da solo come preferisce
+    yolo_box, debug_str = yolo_engine.analyze(str(clean_img_path), target_label="apple")
+    yolo_time = time.time() - t0
+    print(f"[YOLO Res]: {debug_str}")
+    print(f"[YOLO Input]: {str(clean_img_path)}")
+
+    # 5. RESULTS
+    iou_vlm = compute_iou(vlm_box, gt_box) if vlm_box else 0.0
+    iou_yolo = compute_iou(yolo_box, gt_box) if yolo_box else 0.0
+    
+    print("\n=== RISULTATI ===")
+    print(f"VLM  IoU: {iou_vlm:.4f} ({vlm_time:.2f}s)")
+    print(f"YOLO IoU: {iou_yolo:.4f} ({yolo_time:.2f}s)")
+    
+    winner = "YOLO" if iou_yolo >= iou_vlm else "VLM"
+    if iou_yolo == 0 and iou_vlm == 0: winner = "NESSUNO"
+    print(f"VINCITORE: {winner}")
+    
+    # Visuals (Disegniamo sull'immagine che era pulita)
+    vis = clean_bgr.copy() # Usiamo BGR per disegnare con OpenCV
+    draw_box(vis, gt_box, (0, 255, 0), "GT")
+    if vlm_box: draw_box(vis, vlm_box, (0, 0, 255), f"VLM {iou_vlm:.2f}")
+    if yolo_box: draw_box(vis, yolo_box, (255, 0, 0), f"YOLO {iou_yolo:.2f}")
+    
+    cv2.imwrite(str(OUTPUT_DIR / "final_result.png"), vis)
+    print(f"Salvato in {OUTPUT_DIR}")
+    
+    controller.stop()
+
+if __name__ == "__main__":
+    main()

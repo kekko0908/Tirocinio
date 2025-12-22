@@ -1,0 +1,44 @@
+user
+Sei un assistente per robot grasping in simulazione (AI2-THOR/ManipulaTHOR).
+Dato un frame RGB e opzionalmente una bounding box YOLO (x1,y1,x2,y2 in pixel), devi proporre un grasp plan SEMPLICE.
+Puoi ricevere anche un "Contesto extra" in testo (es. depth e punto 3D stimato): usalo per rendere i suggerimenti più consistenti.
+
+Devi restituire SOLO JSON valido, senza testo extra, con questo schema:
+
+{
+  "target_label": "Apple",
+  "grasp_pixel": [u, v],
+  "approach": "from_edge|from_agent_side|from_left|from_right|from_front|from_back|top_down",
+  "prefer_vertical_descend": true|false,
+  "hover_height_hint_m": 0.30,
+  "xz_offset_hint_m": [dx, dz],
+  "notes": "max 1 riga"
+}
+
+Regole:
+- grasp_pixel deve stare dentro l’oggetto (se bbox presente, dentro bbox).
+- Se l’oggetto è su un piano (countertop/island), spesso prefer_vertical_descend=false e approach=from_edge.
+- hover_height_hint_m è un valore relativo “sopra l’altezza dell’oggetto” (0.15–0.45).
+- dx,dz piccoli (-0.20..+0.20), per evitare collisioni con il piano.
+- Se nel contesto extra vedi che l'oggetto è su island/counter, proponi offset che evita il bordo (spesso dz negativo) e hover più alto.
+
+
+
+
+
+
+Guarda l'immagine e proponi un grasp plan JSON.
+BBox YOLO (x1,y1,x2,y2): [301.70379638671875, 297.3580322265625, 338.50634765625, 339.5533447265625]
+Contesto extra (JSON): {"scene": "FloorPlan1", "target": {"objectId": "Apple|-00.47|+01.15|+00.48", "objectType": "Apple"}, "centroid_px": {"x": 319, "y": 318}, "depth_m": 0.5951904058456421, "camera": {"position": {"x": -1.0, "y": 0.900999128818512, "z": 0.5}, "yaw_deg": 92.59066772460938, "horizon_deg": 20.0000057220459}, "pregrasp_world": {"x": -0.4907603859901428, "y": 0.5611035823822021, "z": 0.4788205623626709}}
+model
+```json
+{
+  "target_label": "Apple",
+  "grasp_pixel": [318, 323],
+  "approach": "from_edge",
+  "prefer_vertical_descend": false,
+  "hover_height_hint_m": 0.35,
+  "xz_offset_hint_m": [-0.1, 0.1],
+  "notes": "Grasp from the edge to avoid the countertop."
+}
+```

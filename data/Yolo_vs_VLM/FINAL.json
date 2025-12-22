@@ -1,0 +1,47 @@
+{
+  "avg_vlm": 0.0,
+  "avg_yolo": 0.925631613163716,
+  "yolo_wins": 3,
+  "vlm_wins": 0,
+  "details": [
+    {
+      "obj": "Apple",
+      "vlm": {
+        "iou": 0.0,
+        "time": 108.57449531555176
+      },
+      "yolo": {
+        "iou": 0.9434889434889435,
+        "time": 8.520073652267456,
+        "dbg": "Found 'apple' conf=0.90"
+      },
+      "winner": "YOLO"
+    },
+    {
+      "obj": "Lettuce",
+      "vlm": {
+        "iou": 0.0,
+        "time": 90.68345785140991
+      },
+      "yolo": {
+        "iou": 0.946706388613042,
+        "time": 0.12482047080993652,
+        "dbg": "Found 'bowl' conf=0.34"
+      },
+      "winner": "YOLO"
+    },
+    {
+      "obj": "Mug",
+      "vlm": {
+        "iou": 0.0,
+        "time": 67.31852269172668
+      },
+      "yolo": {
+        "iou": 0.8866995073891626,
+        "time": 0.1621565818786621,
+        "dbg": "Found 'cup' conf=0.63"
+      },
+      "winner": "YOLO"
+    }
+  ]
+}

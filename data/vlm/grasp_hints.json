@@ -1,0 +1,15 @@
+{
+  "target_label": "Refrigerator",
+  "grasp_pixel": [
+    333,
+    250
+  ],
+  "approach": "from_front",
+  "prefer_vertical_descend": false,
+  "hover_height_hint_m": 0.35,
+  "xz_offset_hint_m": [
+    0.0,
+    -0.1
+  ],
+  "notes": "Grasp from the front, slightly above the object to avoid the countertop."
+}
