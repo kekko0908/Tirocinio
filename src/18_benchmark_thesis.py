@@ -153,7 +153,22 @@ class VLM_Predictor:
         if not self.active: return None
         pil_img = Image.fromarray(image_rgb)
         # Prompt diretto
-        prompt = f"Find the '{target_name}'. Return bbox [ymin, xmin, ymax, xmax] 0-1000."
+        prompt = (
+            f"You are an advanced computer vision system specialized in object localization. "
+            f"Your task is to detect the '{target_name}' in this image.\n"
+            "INSTRUCTIONS:\n"
+            "1. ANALYZE: First, identify the object by its visual features (shape, texture) distinguishing it from the background.\n"
+            "2. LOCALIZE: Determine the bounding box coordinates using a normalized scale from 0 to 1000.\n"
+            "   - (0,0) is the Top-Left corner.\n"
+            "   - (1000,1000) is the Bottom-Right corner.\n"
+            "3. FORMAT: Return strictly the list of 4 integers in this specific order: [ymin, xmin, ymax, xmax].\n"
+            "   - ymin: Top edge\n"
+            "   - xmin: Left edge\n"
+            "   - ymax: Bottom edge\n"
+            "   - xmax: Right edge\n"
+            "EXAMPLE OUTPUT: [150, 320, 400, 580]\n"
+            "Provide ONLY the list as output."
+        )
         messages = [{"role": "user", "content": [{"type": "image"}, {"type": "text", "text": prompt}]}]
         inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, return_dict=True)
         inputs = self.processor(text=inputs, images=pil_img, return_tensors="pt").to(self.model.device)

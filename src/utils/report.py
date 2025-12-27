@@ -4,7 +4,7 @@ import numpy as np
 from pathlib import Path
 
 # --- CONFIGURAZIONE ---
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data" / "Yolo_vs_VLM"
 JSON_PATH = DATA_DIR / "FINAL.json"
 OUTPUT_IMG = DATA_DIR / "THESIS_PROFESSIONAL_REPORT.png"

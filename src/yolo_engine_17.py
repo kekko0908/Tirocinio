@@ -8,6 +8,19 @@ from pathlib import Path
 DEBUG_DIR = Path(__file__).resolve().parents[1] / "data" / "Yolo_vs_VLM"
 DEBUG_DIR.mkdir(parents=True, exist_ok=True)
 
+
+def _resolve_model_path(model_path: str | os.PathLike[str]) -> str:
+    p = Path(model_path)
+    if p.exists():
+        return str(p)
+
+    if not p.is_absolute():
+        local = Path(__file__).resolve().parent / p
+        if local.exists():
+            return str(local)
+
+    return str(p)
+
 # --- MAPPA AGGIORNATA ---
 THOR_TO_YOLO_MAP = {
     # CIBO
@@ -48,17 +61,19 @@ def bbox_from_mask(mask01: np.ndarray):
 
 class YoloSegEngine:
     def __init__(self, model_path="yolo11x-seg.pt"):
+        resolved_path = _resolve_model_path(model_path)
         print(f"[YOLO-17] Richiesto modello: {model_path}")
+        print(f"[YOLO-17] Path risolto: {resolved_path}")
         
         # Controllo se il file esiste localmente
-        if os.path.exists(model_path):
-            print(f"[YOLO-17] Trovato file locale: {model_path}")
+        if os.path.exists(resolved_path):
+            print(f"[YOLO-17] Trovato file locale: {resolved_path}")
         else:
             print(f"[YOLO-17] File non trovato, Ultralytics proverà a scaricarlo...")
 
         try:
             # Caricamento Diretto
-            self.model = YOLO(model_path)
+            self.model = YOLO(resolved_path)
             
             # Verifica che sia davvero caricato
             print(f"[YOLO-17] MODELLO CARICATO CORRETTAMENTE: {self.model.ckpt_path}")

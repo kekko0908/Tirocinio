@@ -1,5 +1,6 @@
 import time
 import json
+import os
 import torch
 import cv2
 import math
@@ -11,7 +12,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from PIL import Image
 from ai2thor.controller import Controller
-from transformers import AutoProcessor, AutoModelForCausalLM
+from transformers import AutoProcessor, AutoModelForCausalLM, BitsAndBytesConfig
 
 # --- IMPORT YOLO ENGINE ---
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -90,32 +91,141 @@ def draw_box(img, box, color, label):
 # --- VLM ---
 class VLM_Predictor:
     def __init__(self):
+        self.active = False
+        self.processor = None
+        self.model = None
+        self.input_device = torch.device("cpu")
+        self.max_new_tokens = int(os.getenv("VLM_MAX_NEW_TOKENS", "200"))
+
+        device = self._pick_device()
+        
+        # Logica per quantizzazione 4-bit
+        quant = os.getenv("VLM_QUANT", "auto").strip().lower()
+        use_4bit = device == "cuda" and quant in {"auto", "4bit", "4-bit"} and self._bitsandbytes_available()
+
+        if device == "cuda" and quant in {"auto", "4bit", "4-bit"} and not use_4bit:
+            print("[VLM][WARN] bitsandbytes non installato: 4-bit disabilitato.")
+
+        self._load(device=device, use_4bit=use_4bit)
+
+    def _bitsandbytes_available(self) -> bool:
+        try:
+            import bitsandbytes  # noqa: F401
+        except Exception:
+            return False
+        return True
+
+    def _pick_device(self) -> str:
+        # Verifica esplicita CUDA
+        if not torch.cuda.is_available():
+            print("[VLM] CUDA non disponibile. Uso CPU.")
+            return "cpu"
+        
+        # --- MODIFICA QUI: Abbassato limite a 4GB per GPU ---
+        min_gb = float(os.getenv("VLM_MIN_GPU_GB", "4.0")) 
+        
+        try:
+            total_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            print(f"[VLM] GPU rilevata: {total_gb:.2f} GB (Richiesti min: {min_gb} GB)")
+            
+            if total_gb >= min_gb:
+                return "cuda"
+            else:
+                print(f"[VLM] VRAM insufficiente ({total_gb:.2f} < {min_gb}). Fallback CPU.")
+                return "cpu"
+        except Exception as e:
+            print(f"[VLM] Errore controllo GPU: {e}. Fallback CPU.")
+            return "cpu"
+
+    def _load(self, device: str, use_4bit: bool) -> None:
+        self.input_device = torch.device("cuda:0" if device == "cuda" else "cpu")
+        print(f"[VLM] Init {MODEL_ID_VLM} device={device} quant={'4bit' if use_4bit else 'none'}")
+
         try:
             self.processor = AutoProcessor.from_pretrained(MODEL_ID_VLM, token=True, use_fast=True)
-            self.model = AutoModelForCausalLM.from_pretrained(MODEL_ID_VLM, token=True, torch_dtype=torch.bfloat16, device_map="auto")
+
+            if use_4bit:
+                bnb_config = BitsAndBytesConfig(
+                    load_in_4bit=True,
+                    bnb_4bit_compute_dtype=torch.bfloat16,
+                    bnb_4bit_use_double_quant=True,
+                    bnb_4bit_quant_type="nf4",
+                )
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    MODEL_ID_VLM,
+                    token=True,
+                    quantization_config=bnb_config,
+                    device_map="auto",
+                )
+            elif device == "cuda":
+                # Caricamento standard GPU (se non usi 4-bit)
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    MODEL_ID_VLM,
+                    token=True,
+                    torch_dtype=torch.bfloat16,
+                    device_map="auto",
+                )
+            else:
+                # Caricamento CPU
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    MODEL_ID_VLM,
+                    token=True,
+                    torch_dtype=torch.bfloat16,
+                    device_map="cpu",
+                    low_cpu_mem_usage=True,
+                )
+
+            self.model.eval()
             self.active = True
-        except: self.active = False
+        except Exception as e:
+            print(f"[ERR] VLM Loading Failed: {e}")
+            self.active = False
+
     def predict(self, image_rgb, width, height):
         if not self.active: return None
         pil_img = Image.fromarray(image_rgb)
-        prompt = "Detect 'Apple'. Return [ymin, xmin, ymax, xmax] 0-1000."
+        prompt = (
+            f"You are an advanced computer vision system specialized in object localization. "
+            f"Your task is to detect Apple in this image.\n"
+            "INSTRUCTIONS:\n"
+            "1. ANALYZE: First, identify the object by its visual features (shape, texture) distinguishing it from the background.\n"
+            "2. LOCALIZE: Determine the bounding box coordinates using a normalized scale from 0 to 1000.\n"
+            "   - (0,0) is the Top-Left corner.\n"
+            "   - (1000,1000) is the Bottom-Right corner.\n"
+            "3. FORMAT: Return strictly the list of 4 integers in this specific order: [ymin, xmin, ymax, xmax].\n"
+            "   - ymin: Top edge\n"
+            "   - xmin: Left edge\n"
+            "   - ymax: Bottom edge\n"
+            "   - xmax: Right edge\n"
+            "EXAMPLE OUTPUT: [150, 320, 400, 580]\n"
+            "Provide ONLY the list as output."
+        )
         messages = [{"role": "user", "content": [{"type": "image"}, {"type": "text", "text": prompt}]}]
+        
         inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, return_dict=True)
-        inputs = self.processor(text=inputs, images=pil_img, return_tensors="pt").to(self.model.device)
-        with torch.no_grad(): out = self.model.generate(**inputs, max_new_tokens=200)
-        decoded = self.processor.decode(out[0], skip_special_tokens=True)
+        inputs = self.processor(text=inputs, images=pil_img, return_tensors="pt")
+        # Spostiamo gli input sul device corretto
+        inputs = {k: (v.to(self.model.device) if torch.is_tensor(v) else v) for k, v in inputs.items()}
+
         try:
+            with torch.no_grad():
+                out = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens)
+            
+            decoded = self.processor.decode(out[0], skip_special_tokens=True)
             match = re.search(r"\[(\d+),\s*(\d+),\s*(\d+),\s*(\d+)\]", decoded)
             if match:
                 y1, x1, y2, x2 = map(int, match.groups())
                 return [(x1/1000)*width, (y1/1000)*height, (x2/1000)*width, (y2/1000)*height]
-        except: pass
+        except Exception as e:
+            print(f"[VLM ERROR] {e}")
+            pass
         return None
 
 # --- MAIN ---
 def main():
     print("[INIT] Controller...")
-    controller = Controller(scene="FloorPlan1", agentMode="default", width=640, height=480, renderInstanceSegmentation=True)
+    # NOTA: Lascia 500x500 per evitare crash su Linux
+    controller = Controller(scene="FloorPlan1", agentMode="default", width=500, height=500, renderInstanceSegmentation=True)    
     
     # 1. SETUP
     success, target_id = teleport_near_target_random_yaw(controller, TARGET_TYPE)
@@ -128,7 +238,6 @@ def main():
     h, w, _ = rgb.shape
     
     # --- SALVATAGGIO FRAME PULITO PER YOLO ---
-    # Convertiamo RGB -> BGR per salvarlo correttamente con OpenCV
     clean_bgr = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
     clean_img_path = OUTPUT_DIR / "temp_yolo_input.png"
     cv2.imwrite(str(clean_img_path), clean_bgr)
@@ -140,20 +249,20 @@ def main():
     rows, cols = np.where(mask)
     gt_box = [float(np.min(cols)), float(np.min(rows)), float(np.max(cols)), float(np.max(rows))]
 
-    # 3. TEST VLM (Usa RGB in memoria)
+    # 3. TEST VLM
     print("\n[TEST] VLM...")
     vlm = VLM_Predictor()
-    t0 = time.time(); vlm_box = vlm.predict(rgb, w, h); vlm_time = time.time() - t0
+    t0 = time.time()
+    vlm_box = vlm.predict(rgb, w, h)
+    vlm_time = time.time() - t0
     
-    # 4. TEST YOLO (Usa FILE su disco)
+    # 4. TEST YOLO
     print("\n[TEST] YOLO (from file)...")
     yolo_engine = YoloSegEngine() 
     t0 = time.time()
-    # Passiamo il PERCORSO del file, così YOLO se lo carica da solo come preferisce
     yolo_box, debug_str = yolo_engine.analyze(str(clean_img_path), target_label="apple")
     yolo_time = time.time() - t0
     print(f"[YOLO Res]: {debug_str}")
-    print(f"[YOLO Input]: {str(clean_img_path)}")
 
     # 5. RESULTS
     iou_vlm = compute_iou(vlm_box, gt_box) if vlm_box else 0.0
@@ -167,8 +276,8 @@ def main():
     if iou_yolo == 0 and iou_vlm == 0: winner = "NESSUNO"
     print(f"VINCITORE: {winner}")
     
-    # Visuals (Disegniamo sull'immagine che era pulita)
-    vis = clean_bgr.copy() # Usiamo BGR per disegnare con OpenCV
+    # Visuals
+    vis = clean_bgr.copy()
     draw_box(vis, gt_box, (0, 255, 0), "GT")
     if vlm_box: draw_box(vis, vlm_box, (0, 0, 255), f"VLM {iou_vlm:.2f}")
     if yolo_box: draw_box(vis, yolo_box, (255, 0, 0), f"YOLO {iou_yolo:.2f}")
