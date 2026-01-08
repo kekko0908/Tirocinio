@@ -1,0 +1,25 @@
+{
+  "target_type": "apple",
+  "subgoals": [
+    {
+      "id": 1,
+      "type": "localize",
+      "description": "Localize to the current room."
+    },
+    {
+      "id": 2,
+      "type": "explore",
+      "description": "Explore the room to get a wider view of the environment."
+    },
+    {
+      "id": 3,
+      "type": "search",
+      "description": "Search for the target object ('apple') within the room."
+    },
+    {
+      "id": 4,
+      "type": "approach",
+      "description": "Approach the detected location of the apple."
+    }
+  ]
+}
