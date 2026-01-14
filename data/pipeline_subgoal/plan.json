@@ -1,0 +1,25 @@
+{
+  "target_type": "apple",
+  "subgoals": [
+    {
+      "id": "1",
+      "type": "localize",
+      "description": "Localize the robot's current position within the environment."
+    },
+    {
+      "id": "2",
+      "type": "explore",
+      "description": "Explore the immediate surroundings to gain an initial overview of the area."
+    },
+    {
+      "id": "3",
+      "type": "search",
+      "description": "Search for visual cues associated with apples (e.g., red color, round shape)."
+    },
+    {
+      "id": "4",
+      "type": "approach",
+      "description": "Approach the detected apple, if any."
+    }
+  ]
+}

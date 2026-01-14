@@ -1,0 +1,2187 @@
+[
+  {
+    "step": 0,
+    "state": "EXPLORE",
+    "state_steps": 0,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": false,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 45
+    },
+    "action_meta": {
+      "source": "forced",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": {
+      "target_visible": true,
+      "target_visibility": "clear",
+      "target_location_hint": "bottom_left",
+      "related_objects": [
+        "countertop",
+        "knife",
+        "cutting_board",
+        "apple_basket",
+        "cabinet"
+      ],
+      "confidence": 95
+    },
+    "probe_hint": "bottom_left",
+    "hint_action": {
+      "action": "RotateLeft",
+      "degrees": 45
+    },
+    "probe_raw": "user\nYou are given a single RGB frame from AI2-THOR and a target object class. Return a compact structured assessment with focus on the target. Output only valid JSON, no extra text.\n\n\n\n\n\nTARGET_OBJECT: Apple\nFields:\ntarget_visible: true/false\ntarget_visibility: one of [\"clear\",\"partial\",\"uncertain\",\"none\"]\ntarget_location_hint: one of [\"top_left\",\"top\",\"top_right\",\"left\",\"center\",\"right\",\"bottom_left\",\"bottom\",\"bottom_right\",\"unknown\"]\nrelated_objects: array of up to 5 strings\nconfidence: integer 0-100\nIf uncertain, set target_visible=false and target_visibility=\"uncertain\".\nmodel\n```json\n{\n  \"target_visible\": true,\n  \"target_visibility\": \"clear\",\n  \"target_location_hint\": \"bottom_left\",\n  \"related_objects\": [\n    \"countertop\",\n    \"knife\",\n    \"cutting_board\",\n    \"apple_basket\",\n    \"cabinet\"\n  ],\n  \"confidence\": 95\n}\n```",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.527798652648926,
+      "dist_left_m": 2.7971439361572266,
+      "dist_right_m": 2.9295661449432373,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 135.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.53,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 1,
+    "state": "APPROACH",
+    "state_steps": 0,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "MoveAhead",
+      "moveMagnitude": 0.15
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.527798652648926,
+      "dist_left_m": 2.7971439361572266,
+      "dist_right_m": 2.9295661449432373,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 135.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.53,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 2,
+    "state": "APPROACH",
+    "state_steps": 1,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "MoveAhead",
+      "moveMagnitude": 0.15
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.527798652648926,
+      "dist_left_m": 2.7971439361572266,
+      "dist_right_m": 2.9295661449432373,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 135.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.53,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 3,
+    "state": "APPROACH",
+    "state_steps": 2,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "MoveAhead",
+      "moveMagnitude": 0.15
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.527798652648926,
+      "dist_left_m": 2.7971439361572266,
+      "dist_right_m": 2.9295661449432373,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 135.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.53,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 4,
+    "state": "APPROACH",
+    "state_steps": 3,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "MoveAhead",
+      "moveMagnitude": 0.15
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.527798652648926,
+      "dist_left_m": 2.7971439361572266,
+      "dist_right_m": 2.9295661449432373,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 135.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.53,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 5,
+    "state": "APPROACH",
+    "state_steps": 4,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "MoveRight",
+      "moveMagnitude": 0.25
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.788454532623291,
+      "dist_left_m": 3.0014090538024902,
+      "dist_right_m": 2.697483777999878,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.75
+      },
+      "yaw": 135.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.79,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 0,
+          "free_m": 3.0,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 3.0,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 6,
+    "state": "APPROACH",
+    "state_steps": 5,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.521088123321533,
+      "dist_left_m": 2.9727962017059326,
+      "dist_right_m": 2.910851240158081,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.75
+      },
+      "yaw": 129.99998474121094,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.52,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 0,
+          "free_m": 2.97,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 2.97,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 7,
+    "state": "APPROACH",
+    "state_steps": 6,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.2503228187561035,
+      "dist_left_m": 2.960782289505005,
+      "dist_right_m": 2.9108712673187256,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.75
+      },
+      "yaw": 125.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.25,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 0,
+          "free_m": 2.96,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 2.96,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 8,
+    "state": "APPROACH",
+    "state_steps": 7,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 4.039509296417236,
+      "dist_left_m": 2.934988021850586,
+      "dist_right_m": 2.9090542793273926,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.75
+      },
+      "yaw": 120.00000762939453,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 4.04,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 0,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 2.93,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 9,
+    "state": "APPROACH",
+    "state_steps": 8,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 3.8766329288482666,
+      "dist_left_m": 2.970059871673584,
+      "dist_right_m": 3.0398902893066406,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.75
+      },
+      "yaw": 114.99999237060547,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        2,
+        3
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 3.88,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 3.04,
+          "unvisited": true,
+          "novelty": 2.67
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 3.04,
+          "unvisited": true,
+          "novelty": 2.67
+        }
+      ],
+      "novelty_score": 2.67
+    }
+  },
+  {
+    "step": 10,
+    "state": "APPROACH",
+    "state_steps": 9,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "MoveRight",
+      "moveMagnitude": 0.25
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 3.8765432834625244,
+      "dist_left_m": 2.9700071811676025,
+      "dist_right_m": 2.8084754943847656,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.5
+      },
+      "yaw": 114.99999237060547,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 1
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 16.7,
+      "coverage_ratio": 0.167,
+      "view_dirs": [
+        2
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 3.88,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 2.97,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 5,
+          "free_m": 2.97,
+          "unvisited": true,
+          "novelty": 2.83
+        }
+      ],
+      "novelty_score": 2.83
+    }
+  },
+  {
+    "step": 11,
+    "state": "APPROACH",
+    "state_steps": 10,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 3.7537286281585693,
+      "dist_left_m": 3.0292091369628906,
+      "dist_right_m": 2.9727962017059326,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.5
+      },
+      "yaw": 109.99999237060547,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 1
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 16.7,
+      "coverage_ratio": 0.167,
+      "view_dirs": [
+        2
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 3.75,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 3.03,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 5,
+          "free_m": 3.03,
+          "unvisited": true,
+          "novelty": 2.83
+        }
+      ],
+      "novelty_score": 2.83
+    }
+  },
+  {
+    "step": 12,
+    "state": "APPROACH",
+    "state_steps": 11,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 3.6655640602111816,
+      "dist_left_m": 3.115036725997925,
+      "dist_right_m": 3.4544835090637207,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.5
+      },
+      "yaw": 105.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 1
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 16.7,
+      "coverage_ratio": 0.167,
+      "view_dirs": [
+        2
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 3.67,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 3.45,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 3.45,
+          "unvisited": true,
+          "novelty": 2.83
+        }
+      ],
+      "novelty_score": 2.83
+    }
+  },
+  {
+    "step": 13,
+    "state": "APPROACH",
+    "state_steps": 12,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 3.6214921474456787,
+      "dist_left_m": 3.231060266494751,
+      "dist_right_m": 3.7593636512756348,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.25,
+        "y": 0.900999128818512,
+        "z": 0.5
+      },
+      "yaw": 99.99998474121094,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 1
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 16.7,
+      "coverage_ratio": 0.167,
+      "view_dirs": [
+        2
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 3,
+          "free_m": 3.76,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 3.76,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 5,
+          "free_m": 3.76,
+          "unvisited": true,
+          "novelty": 2.83
+        }
+      ],
+      "novelty_score": 2.83
+    }
+  },
+  {
+    "step": 14,
+    "state": "APPROACH",
+    "state_steps": 13,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "MoveAhead",
+      "moveMagnitude": 0.15
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 3.3640682697296143,
+      "dist_left_m": 3.005441188812256,
+      "dist_right_m": 3.759279727935791,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 0.5
+      },
+      "yaw": 99.99998474121094,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 1
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 16.7,
+      "coverage_ratio": 0.167,
+      "view_dirs": [
+        2
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 3,
+          "free_m": 3.76,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 3.76,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 5,
+          "free_m": 3.76,
+          "unvisited": true,
+          "novelty": 2.83
+        }
+      ],
+      "novelty_score": 2.83
+    }
+  },
+  {
+    "step": 15,
+    "state": "APPROACH",
+    "state_steps": 14,
+    "target": "Apple",
+    "target_index": 0,
+    "approach_active": true,
+    "action": {
+      "action": "RotateLeft",
+      "degrees": 5
+    },
+    "action_meta": {
+      "source": "approach",
+      "overrides": []
+    },
+    "nav_action": null,
+    "approach_assessment": {
+      "approach_possible": true,
+      "confidence": 0.95,
+      "reason": "The target (apple) is visible and unobstructed in front of the robot. The distance to the target is within the safe front distance."
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "probe": null,
+    "probe_hint": null,
+    "hint_action": null,
+    "probe_raw": "",
+    "object_memory": {
+      "target_last_seen": {
+        "object_class": "Apple",
+        "position": {
+          "x": -0.46516576409339905,
+          "y": 1.151225209236145,
+          "z": 0.47580063343048096
+        },
+        "confidence": 0.2544765770435333,
+        "step": 0,
+        "centroid_px": [
+          238,
+          298
+        ],
+        "source": "metadata",
+        "episode_id": "1768061558"
+      },
+      "recent_detections_topk": [
+        {
+          "object_class": "Apple",
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "confidence": 0.2544765770435333,
+          "step": 0,
+          "centroid_px": [
+            238,
+            298
+          ],
+          "source": "metadata",
+          "episode_id": "1768061558"
+        }
+      ]
+    },
+    "long_term_priors": {
+      "likely_target_regions_topk": [
+        {
+          "position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          },
+          "count": 34,
+          "last_position": {
+            "x": -0.46516576409339905,
+            "y": 1.151225209236145,
+            "z": 0.47580063343048096
+          }
+        }
+      ]
+    },
+    "robot_state": {
+      "dist_front_m": 3.3753983974456787,
+      "dist_left_m": 3.080716848373413,
+      "dist_right_m": 3.5349626541137695,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 0.5
+      },
+      "yaw": 94.99999237060547,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 1
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 16.7,
+      "coverage_ratio": 0.167,
+      "view_dirs": [
+        2
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 3,
+          "free_m": 3.53,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 3.53,
+          "unvisited": true,
+          "novelty": 2.83
+        },
+        {
+          "dir_idx": 5,
+          "free_m": 3.53,
+          "unvisited": true,
+          "novelty": 2.83
+        }
+      ],
+      "novelty_score": 2.83
+    }
+  }
+]

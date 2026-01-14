@@ -1,0 +1,61 @@
+\chapter{Introduzione}
+\label{ch:introduzione}
+
+\section{Contesto applicativo}
+\label{sec:introduzione-contesto}
+Negli ultimi anni la robotica mobile e la manipolazione in ambienti indoor hanno visto una crescente attenzione nel contesto dell'\emph{Embodied AI}, dove un agente deve percepire l'ambiente, prendere decisioni e agire in modo sequenziale per raggiungere un obiettivo. In tali scenari, la riuscita del compito dipende non solo dall'accuratezza della percezione, ma anche dalla capacit\`a di integrare informazioni eterogenee e di gestire l'incertezza durante il ciclo percezione--decisione--azione.
+
+La simulazione costituisce un supporto fondamentale per lo sviluppo e la validazione di pipeline robotiche: consente di eseguire esperimenti riproducibili, controllare le condizioni iniziali, isolare variabili e raccogliere dati dettagliati senza i costi e i rischi associati all'hardware reale. In questa tesi il contesto di sperimentazione \`e un ambiente simulato indoor, in cui un agente deve (i) esplorare una scena, (ii) individuare un oggetto target a partire da una richiesta in linguaggio naturale e (iii) completare, quando previsto, una fase di avvicinamento e manipolazione del target.
+
+\section{Motivazioni}
+\label{sec:introduzione-motivazioni}
+L'object detection moderna, e in particolare i modelli della famiglia YOLO, offre prestazioni elevate nella localizzazione di oggetti grazie a inferenza veloce e output strutturati (bounding box e, in alcuni casi, maschere di segmentazione). Tuttavia, in un compito robotico end-to-end, la detection rappresenta soltanto una parte del problema: la pipeline deve decidere \emph{quando} attivare la percezione, \emph{come} muoversi per migliorare la visibilit\`a del target e \emph{come} reagire a fallimenti, collisioni o ambiguit\`a.
+
+Parallelamente, i Vision--Language Models (VLM) permettono di combinare contenuti visivi e linguaggio, risultando adatti a compiti che richiedono ragionamento, pianificazione e interpretazione di obiettivi espressi in modo naturale. Nonostante ci\`o, l'uso diretto di un VLM come unico componente decisionale pu\`o soffrire di instabilit\`a, sensibilit\`a al contesto e difficolt\`a nel garantire output sempre coerenti e verificabili.
+
+La motivazione principale della tesi \`e quindi studiare un'integrazione tra object detection e VLM che sfrutti i punti di forza di entrambi: la precisione e la struttura dell'output della detection per la localizzazione, e la capacit\`a dei VLM di guidare la navigazione e la selezione dell'azione all'interno di un ciclo percezione--azione. In particolare, l'obiettivo \`e progettare un sistema modulare e robusto che permetta di passare dal goal in linguaggio naturale a una sequenza di azioni e verifiche percettive, fino alla localizzazione (e, quando previsto, alla manipolazione) del target.
+
+\section{Obiettivi}
+\label{sec:introduzione-obiettivi}
+La tesi si pone i seguenti obiettivi generali, intesi come progettazione e validazione di un prototipo sperimentale in simulazione per studiare l'integrazione tra componenti percettive e multimodali:
+\begin{itemize}
+  \item definire un'architettura modulare e un flusso operativo end-to-end che, a partire da un goal in linguaggio naturale, supporti esplorazione della scena, localizzazione del target e fase di avvicinamento;
+  \item integrare un modulo di object detection basato su YOLO (con supporto a bounding box e, quando disponibile, segmentazione) con un modulo VLM impiegato per la pianificazione di sotto-obiettivi e la selezione delle azioni;
+  \item introdurre meccanismi di robustezza e \emph{safety} coerenti con quanto osservabile in simulazione, includendo strategie anti-loop, recovery da collisioni e criteri di arresto nella fase di approccio;
+  \item estendere il flusso sperimentale a una fase di manipolazione in modalit\`a braccio, utilizzando stime geometriche derivate dal depth per definire punti di pregrasp/grasp e guidare tentativi di pickup;
+  \item valutare sperimentalmente l'approccio proposto, includendo un confronto tra localizzazione ottenuta con YOLO e localizzazione stimata dal VLM, tramite metriche quantitative e analisi qualitativa dei casi di errore.
+\end{itemize}
+
+\section{Domande di ricerca}
+\label{sec:introduzione-domande-ricerca}
+Le domande di ricerca riportate in questa sezione definiscono il perimetro dell'analisi e orientano le scelte progettuali e sperimentali presentate nei capitoli successivi. In particolare, esse mirano a chiarire il ruolo dei VLM all'interno di un ciclo decisionale sequenziale, a valutare l'affidabilit\`a complessiva di una pipeline end-to-end in simulazione e a confrontare, in modo sistematico, la qualit\`a della localizzazione ottenuta tramite object detection rispetto a quella stimata da un VLM.
+
+\subsection{Integrazione tra percezione e ragionamento}
+\label{subsec:introduzione-rq-integrazione}
+La prima domanda di ricerca indaga come combinare in modo coerente una percezione \emph{strutturata} (object detection e segmentazione) con una componente di \emph{ragionamento} multimodale (VLM), all'interno di un controllo sequenziale guidato da un goal espresso in linguaggio naturale. Il punto centrale \`e comprendere in che misura il VLM possa contribuire a trasformare l'obiettivo in un piano operativo, mantenendo coerenza tra (i) le informazioni osservabili nel frame corrente, (ii) lo storico delle azioni e (iii) i segnali percettivi prodotti dalla detection.
+
+La domanda viene affrontata analizzando l'integrazione tra: la generazione di sotto-obiettivi, la selezione dell'azione a ogni passo e la decisione di quando attivare la detection. In tale prospettiva, la detection fornisce misure direttamente verificabili (ad esempio bounding box e maschere) che possono essere utilizzate come vincoli e come segnali di conferma, mentre il VLM fornisce una guida ad alto livello per l'esplorazione e per la scelta delle azioni, specialmente in condizioni di osservabilit\`a incompleta del target.
+
+\subsection{Affidabilit\`a del controllo end-to-end in simulazione}
+\label{subsec:introduzione-rq-affidabilita}
+La seconda domanda di ricerca riguarda l'affidabilit\`a di una pipeline end-to-end in simulazione, con particolare attenzione alla stabilit\`a del comportamento dell'agente nel lungo periodo. In un contesto in cui la decisione di controllo \`e influenzata da pi\`u componenti (percezione, memoria di esplorazione, regole di safety e ragionamento multimodale), l'affidabilit\`a non coincide con la sola accuratezza di un singolo modulo, ma dipende dalla capacit\`a del sistema di evitare dinamiche indesiderate e di gestire gli errori.
+
+La domanda considera quindi aspetti quali: la prevenzione di oscillazioni e loop durante l'esplorazione; la gestione di collisioni e fallimenti dell'azione; la continuit\`a del processo decisionale in presenza di informazioni parziali; e l'efficacia dei meccanismi di recovery e di safety. La simulazione consente di valutare tali aspetti in modo ripetibile e di analizzare l'impatto di scelte progettuali e parametri operativi (ad esempio frequenza di attivazione della detection, soglie di confidenza e criteri di arresto nella fase di avvicinamento).
+
+\subsection{Confronto tra approcci di localizzazione}
+\label{subsec:introduzione-rq-confronto-localizzazione}
+La terza domanda di ricerca mira a confrontare in modo sistematico due modalit\`a di localizzazione del target a partire da osservazioni visive: una basata su YOLO (con output espliciti quali bounding box e maschere) e una basata su stime prodotte da un VLM. Lo scopo non \`e soltanto stabilire quale approccio risulti mediamente pi\`u accurato, ma comprendere le condizioni in cui ciascuno dei due risulta pi\`u affidabile e utile ai fini del controllo.
+
+Il confronto viene condotto sia sul piano quantitativo, tramite metriche di sovrapposizione e misure di efficienza, sia sul piano qualitativo, attraverso l'analisi dei casi in cui la localizzazione condiziona direttamente le scelte operative della pipeline (ad esempio l'attivazione della fase di avvicinamento o l'esecuzione di tentativi di manipolazione). In tale ottica, si considerano vantaggi e limiti di entrambi gli approcci, includendo i principali failure mode osservabili e l'impatto complessivo sul flusso end-to-end.
+
+\section{Contributi}
+\label{sec:introduzione-contributi}
+I contributi principali della tesi consistono nella progettazione e realizzazione di una pipeline modulare in simulazione che integra:
+una componente di pianificazione e controllo basata su VLM per la decomposizione del goal e la selezione delle azioni;
+una componente di object detection basata su YOLO per la localizzazione del target tramite bounding box e maschera;
+meccanismi di esplorazione, memoria e regole di safety per rendere il comportamento dell'agente pi\`u stabile nel tempo;
+un protocollo sperimentale per confrontare YOLO e VLM nella localizzazione, tramite metriche di sovrapposizione e analisi dei casi di errore.
+
+\section{Organizzazione del documento}
+\label{sec:introduzione-organizzazione}
+Il resto della tesi \`e organizzato come segue. Il Capitolo~\ref{ch:stato-arte} presenta lo stato dell'arte su simulazione robotica, object detection e Vision--Language Models, evidenziando vantaggi e limitazioni dei principali approcci. Il Capitolo~\ref{ch:requisiti} formalizza il problema, le ipotesi e i requisiti del sistema. Il Capitolo~\ref{ch:progettazione} descrive l'approccio proposto e l'architettura software, introducendo il flusso end-to-end e i moduli principali. Il Capitolo~\ref{ch:implementazione} illustra le scelte implementative e i dettagli dei componenti. Il Capitolo~\ref{ch:risultati} presenta la valutazione sperimentale e i risultati, includendo il confronto tra YOLO e VLM. Infine, il Capitolo~\ref{ch:discussione} discute i risultati e i limiti, mentre il Capitolo~\ref{ch:conclusioni} conclude il lavoro e propone possibili sviluppi futuri.

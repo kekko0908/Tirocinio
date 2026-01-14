@@ -1,25 +1,21 @@
 {
-  "target_type": "apple",
-  "subgoals": [
+  "goal": "Cerca la ciotola",
+  "targets": [
     {
-      "id": 1,
-      "type": "localize",
-      "description": "Localize to the current room."
-    },
-    {
-      "id": 2,
-      "type": "explore",
-      "description": "Explore the room to get a wider view of the environment."
-    },
-    {
-      "id": 3,
-      "type": "search",
-      "description": "Search for the target object ('apple') within the room."
-    },
-    {
-      "id": 4,
-      "type": "approach",
-      "description": "Approach the detected location of the apple."
+      "label": "Bowl",
+      "mode": "global"
     }
+  ],
+  "near_relation": null,
+  "states": [
+    "SELECT_TARGET",
+    "EXPLORE",
+    "SEARCH",
+    "SEARCH_NEAR",
+    "NAVIGATE",
+    "APPROACH",
+    "LOCALIZE",
+    "DONE",
+    "FAIL"
   ]
 }

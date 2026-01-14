@@ -4,67 +4,206 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
+KNOWN_TARGETS = {
+    "apple": ["apple", "mela"],
+    "mug": ["mug", "tazza", "cup"],
+    "bottle": ["bottle", "bottiglia"],
+    "lettuce": ["lettuce", "insalata"],
+    "banana": ["banana"],
+    "book": ["book", "libro"],
+    "bowl": ["bowl", "ciotola"],
+}
+
+
+def _extract_balanced_json(text: str):
+    """
+    Estrae un oggetto JSON bilanciato da testo.
+    Gestisce stringhe e escape per non rompere le graffe.
+    Ritorna dict/list o None se non valido.
+    """
+    start = text.find("{")
+    if start == -1:
+        return None
+    in_str = False
+    escape = False
+    depth = 0
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_str:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == "\"":
+                in_str = False
+            continue
+        if ch == "\"":
+            in_str = True
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                candidate = text[start : i + 1]
+                try:
+                    return json.loads(candidate)
+                except Exception:
+                    return None
+    return None
+
 
 def extract_json_anywhere(text: str):
-    m = re.search(r"```json\s*(\{.*?\})\s*```", text, flags=re.DOTALL)
-    if m:
-        try:
-            return json.loads(m.group(1))
-        except Exception:
-            pass
-    start = text.find("{")
-    end = text.rfind("}")
-    if start != -1 and end != -1 and end > start:
-        try:
-            return json.loads(text[start : end + 1])
-        except Exception:
-            return None
+    """
+    Cerca un JSON valido in un testo libero.
+    Supporta blocchi fenced e ricerca da destra.
+    Ritorna l'oggetto JSON o None.
+    """
+    # 1) Fenced JSON blocks (anche senza fence di chiusura).
+    for m in re.finditer(r"```json\s*(\{.*?)(?:```|$)", text, flags=re.DOTALL):
+        candidate = m.group(1).strip()
+        data = _extract_balanced_json(candidate)
+        if data is not None:
+            return data
+    # 2) Cerca da destra l'ultimo oggetto JSON valido.
+    starts = [m.start() for m in re.finditer(r"\{", text)]
+    for start in reversed(starts):
+        data = _extract_balanced_json(text[start:])
+        if data is not None:
+            return data
     return None
 
 
 def safe_write_json(path: Path, obj) -> None:
+    """
+    Scrive JSON su disco creando le directory.
+    Serializza con indent e encoding utf-8.
+    Ritorna None dopo la scrittura.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
 def normalize_label(text: str) -> str:
+    """
+    Normalizza etichette in formato alfanumerico.
+    Rimuove spazi e caratteri non validi.
+    Ritorna la label in lower case.
+    """
     return re.sub(r"[^a-z0-9_]+", "", text.strip().lower())
 
 
 def guess_target_from_goal(goal_text: str) -> str:
+    """
+    Prova a indovinare il target dal testo del goal.
+    Confronta parole chiave note per oggetto.
+    Ritorna la label Title Case o stringa vuota.
+    """
     goal_l = goal_text.lower()
-    known = {
-        "apple": ["apple", "mela"],
-        "mug": ["mug", "tazza", "cup"],
-        "bottle": ["bottle", "bottiglia"],
-        "lettuce": ["lettuce", "insalata"],
-        "banana": ["banana"],
-        "book": ["book", "libro"],
-        "bowl": ["bowl", "ciotola"],
-    }
-    for label, keys in known.items():
+    for label, keys in KNOWN_TARGETS.items():
         if any(k in goal_l for k in keys):
             return label.title()
     return ""
 
 
+def _find_first_label(text: str) -> str:
+    """
+    Trova la prima label presente nel testo.
+    Usa la posizione piu a sinistra tra le keyword.
+    Ritorna la label Title Case o stringa vuota.
+    """
+    text_l = text.lower()
+    best = None
+    for label, keys in KNOWN_TARGETS.items():
+        for k in keys:
+            idx = text_l.find(k)
+            if idx == -1:
+                continue
+            if best is None or idx < best[0]:
+                best = (idx, label.title())
+            break
+    if not best:
+        return ""
+    return best[1]
+
+
+def extract_targets_from_goal(goal_text: str) -> List[str]:
+    """
+    Estrae tutte le label presenti nel goal.
+    Ordina per posizione e rimuove duplicati.
+    Ritorna la lista ordinata di target.
+    """
+    goal_l = goal_text.lower()
+    hits = []
+    for label, keys in KNOWN_TARGETS.items():
+        idx = None
+        for k in keys:
+            pos = goal_l.find(k)
+            if pos != -1:
+                idx = pos if idx is None else min(idx, pos)
+        if idx is not None:
+            hits.append((idx, label.title()))
+    hits.sort(key=lambda x: x[0])
+    ordered = []
+    seen = set()
+    for _, label in hits:
+        if label in seen:
+            continue
+        seen.add(label)
+        ordered.append(label)
+    return ordered
+
+
+def parse_near_relation(goal_text: str) -> Optional[Dict[str, str]]:
+    """
+    Parsa una relazione "near/vicino" dal goal.
+    Identifica target e reference distinti.
+    Ritorna dict con target/reference o None.
+    """
+    goal_l = goal_text.lower()
+    if "vicino" in goal_l:
+        left, right = goal_l.split("vicino", 1)
+    elif "near" in goal_l:
+        left, right = goal_l.split("near", 1)
+    else:
+        return None
+    target = _find_first_label(left)
+    reference = _find_first_label(right)
+    if not target or not reference or target == reference:
+        return None
+    return {"target": target, "reference": reference}
+
+
 def normalize_action(action: str) -> Optional[str]:
+    """
+    Normalizza nome azione a formato canonico.
+    Mappa sinonimi e varianti a ActionSet.
+    Ritorna stringa azione o None.
+    """
     if not action:
         return None
     a = re.sub(r"\s+", "", str(action)).lower()
     mapping = {
         "moveahead": "MoveAhead",
+        "moveback": "MoveBack",
+        "movebackward": "MoveBack",
+        "movebackwards": "MoveBack",
+        "moveleft": "MoveLeft",
+        "moveright": "MoveRight",
+        "strafeleft": "MoveLeft",
+        "straferight": "MoveRight",
         "rotateleft": "RotateLeft",
         "rotateright": "RotateRight",
-        "lookup": "LookUp",
-        "lookdown": "LookDown",
-        "done": "Done",
-        "stop": "Done",
     }
     return mapping.get(a)
 
 
 def bbox_iou(box_a: List[float], box_b: List[float]) -> float:
+    """
+    Calcola IoU tra due bounding box xyxy.
+    Gestisce intersezione e area di unione.
+    Ritorna un valore float tra 0 e 1.
+    """
     ax1, ay1, ax2, ay2 = box_a
     bx1, by1, bx2, by2 = box_b
     inter_x1 = max(ax1, bx1)
@@ -83,6 +222,11 @@ def bbox_iou(box_a: List[float], box_b: List[float]) -> float:
 
 
 def parse_vlm_bbox(text: str, width: int, height: int) -> Optional[List[float]]:
+    """
+    Parsa una bbox da testo libero o JSON.
+    Clampa ai limiti immagine e valida il box.
+    Ritorna lista [x1,y1,x2,y2] o None.
+    """
     if not text:
         return None
     if "NOT_VISIBLE" in text.upper():
@@ -101,6 +245,11 @@ def parse_vlm_bbox(text: str, width: int, height: int) -> Optional[List[float]]:
         return None
 
     def clamp_box(vals):
+        """
+        Convalida e limita una bbox ai limiti immagine.
+        Corregge coordinate fuori range e verifica area positiva.
+        Ritorna la bbox clamped o None.
+        """
         x1, y1, x2, y2 = vals
         x1 = max(0.0, min(x1, float(width - 1)))
         y1 = max(0.0, min(y1, float(height - 1)))
@@ -130,8 +279,21 @@ def parse_vlm_bbox(text: str, width: int, height: int) -> Optional[List[float]]:
 
 
 def format_action_spec(spec: Dict) -> str:
+    """
+    Formatta uno spec azione in stringa compatta.
+    Include gradi o magnitudine se presenti.
+    Ritorna la stringa pronta per log.
+    """
     action = str(spec.get("action", ""))
     degrees = spec.get("degrees", None)
     if degrees is not None and action in {"RotateLeft", "RotateRight"}:
         return f"{action}({int(degrees)})"
+    move_mag = spec.get("moveMagnitude", None)
+    if move_mag is not None and action in {"MoveAhead", "MoveBack", "MoveLeft", "MoveRight"}:
+        try:
+            mag_val = float(move_mag)
+        except Exception:
+            mag_val = None
+        if mag_val is not None:
+            return f"{action}({mag_val:.2f})"
     return action

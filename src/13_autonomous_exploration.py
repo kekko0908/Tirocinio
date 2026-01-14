@@ -24,6 +24,7 @@ TARGET_TYPE = "Apple"
 MIN_DIST_TO_GRASP = 0.60  
 OBSTACLE_THRESHOLD = 0.45 
 MAX_STEPS = 800
+DEBUG_EVERY = 1
 
 # --- UTILS MATEMATICHE ---
 
@@ -66,6 +67,20 @@ def find_target_in_view(event, target_type):
         if len(xs) > 0: cx = int(np.mean(xs))
             
     return True, tid, cx
+
+def debug_step(step, state, seen, cx, dist, obstacle_dist, stuck_counter, action=None):
+    if DEBUG_EVERY <= 0 or step % DEBUG_EVERY != 0:
+        return
+    parts = [f"[DBG] S{step:03d}", state, f"seen={seen}"]
+    if cx is not None:
+        parts.append(f"cx={cx}")
+    if dist is not None:
+        parts.append(f"dist={dist:.2f}")
+    parts.append(f"obs={obstacle_dist:.2f}")
+    parts.append(f"stuck={stuck_counter}")
+    if action:
+        parts.append(f"action={action}")
+    print(" | ".join(parts))
 
 # --- MAIN LOOP ---
 
@@ -119,6 +134,7 @@ def main():
             if state == "SEARCH":
                 if seen:
                     print_ok(f"Target VISTO ({tid}). Inseguo...")
+                    debug_step(step_count, state, seen, cx, None, obstacle_dist, stuck_counter, "to_APPROACH")
                     state = "APPROACH"
                     target_id = tid
                     continue
@@ -126,37 +142,47 @@ def main():
                 # Strategia: Random Walk con evitamento ostacoli
                 if obstacle_dist < OBSTACLE_THRESHOLD:
                     action = "RotateRight" if random.random() > 0.5 else "RotateLeft"
+                    debug_step(step_count, state, seen, cx, None, obstacle_dist, stuck_counter, action)
                     controller.step(action=action, degrees=random.randint(45, 90))
                 else:
                     if random.random() < 0.1:
+                        debug_step(step_count, state, seen, cx, None, obstacle_dist, stuck_counter, "RotateRight(30)")
                         controller.step(action="RotateRight", degrees=30)
                     else:
+                        debug_step(step_count, state, seen, cx, None, obstacle_dist, stuck_counter, "MoveAhead(0.25)")
                         controller.step(action="MoveAhead", moveMagnitude=0.25)
                         
             elif state == "APPROACH":
                 if not seen:
                     # Perso target? Cercalo localmente
+                    debug_step(step_count, state, seen, None, None, obstacle_dist, stuck_counter, "RotateRight(10)")
                     controller.step("RotateRight", degrees=10)
                     if stuck_counter > 5: state = "SEARCH"
                     continue
                 
                 obj_meta = next((o for o in event.metadata["objects"] if o["objectId"] == target_id), None)
-                if not obj_meta: continue
+                if not obj_meta:
+                    debug_step(step_count, state, seen, cx, None, obstacle_dist, stuck_counter, "no_obj_meta")
+                    continue
                 dist = obj_meta["distance"]
+                debug_step(step_count, state, seen, cx, dist, obstacle_dist, stuck_counter, None)
                 
                 # Se bloccato mentre vede il target, prova manovra evasiva
                 if stuck_counter > 3:
                     print_warn(f"BLOCCATO. Manovra evasiva...")
                     evasive = "MoveRight" if random.random() > 0.5 else "MoveLeft"
+                    debug_step(step_count, state, seen, cx, dist, obstacle_dist, stuck_counter, evasive)
                     controller.step(action=evasive, moveMagnitude=0.25)
                     stuck_counter = 0
                     continue
 
                 # 1. ROTAZIONE (Centramento preciso)
                 if cx < (CENTER_X - CENTER_TOLERANCE): 
+                    debug_step(step_count, state, seen, cx, dist, obstacle_dist, stuck_counter, "RotateLeft(5)")
                     controller.step("RotateLeft", degrees=5)
                     continue
                 elif cx > (CENTER_X + CENTER_TOLERANCE): 
+                    debug_step(step_count, state, seen, cx, dist, obstacle_dist, stuck_counter, "RotateRight(5)")
                     controller.step("RotateRight", degrees=5)
                     continue
                 
@@ -169,10 +195,12 @@ def main():
                     
                     # Rallenta quando è vicino
                     step_sz = 0.15 if dist < 1.2 else 0.25
+                    debug_step(step_count, state, seen, cx, dist, obstacle_dist, stuck_counter, f"MoveAhead({step_sz:.2f})")
                     ev = controller.step("MoveAhead", moveMagnitude=step_sz)
                     
                     # Se sbatte contro qualcosa (es. angolo del tavolo)
                     if not ev.metadata["lastActionSuccess"]:
+                        debug_step(step_count, state, seen, cx, dist, obstacle_dist, stuck_counter, "MoveRight(0.10)")
                         controller.step("MoveRight", moveMagnitude=0.10)
                 else:
                     print_ok(f"Distanza raggiunta ({dist:.2f}m) e CENTRATO!")

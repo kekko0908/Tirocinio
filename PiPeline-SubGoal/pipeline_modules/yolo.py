@@ -6,6 +6,11 @@ from .utils import normalize_label
 
 class YOLODetector:
     def __init__(self, model_path: str, conf: float, imgsz: int, target_label: str):
+        """
+        Inizializza il detector YOLO e i parametri.
+        Carica il modello e normalizza target_label.
+        Imposta soglie e dimensioni immagine.
+        """
         try:
             from ultralytics import YOLO
         except Exception as e:
@@ -16,6 +21,11 @@ class YOLODetector:
         self.target_label = normalize_label(target_label)
 
     def detect(self, frame_rgb: np.ndarray):
+        """
+        Esegue inferenza YOLO su un frame RGB.
+        Seleziona la bbox migliore per il target.
+        Ritorna (det, mask) o (None, None).
+        """
         results = self.model.predict(source=frame_rgb, conf=self.conf, imgsz=self.imgsz, verbose=False)
         if not results:
             return None, None

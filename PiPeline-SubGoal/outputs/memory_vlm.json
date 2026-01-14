@@ -1,0 +1,17 @@
+{
+  "scene_id": "FloorPlan1",
+  "episode_id": "1768234644",
+  "targets": {
+    "Bowl": {
+      "last_seen_hint": "right",
+      "last_seen_step": 3,
+      "last_seen_source": "probe",
+      "last_seen_centroid_px": [
+        366,
+        296
+      ],
+      "last_nav_route": "unknown",
+      "last_nav_rationale": "The bowl is likely visible as it is close by and the previous detection was successful."
+    }
+  }
+}

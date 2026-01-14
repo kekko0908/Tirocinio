@@ -8,6 +8,11 @@ from .utils import format_action_spec
 
 
 def draw_detection(frame_bgr: np.ndarray, det: dict, mask01: Optional[np.ndarray] = None):
+    """
+    Disegna bbox, centroid e maschera di detection.
+    Aggiunge etichetta con score sul frame.
+    Ritorna un frame BGR annotato.
+    """
     x1, y1, x2, y2 = [int(v) for v in det["bbox_xyxy"]]
     cx, cy = det["centroid_px"]
     vis = frame_bgr.copy()
@@ -24,6 +29,11 @@ def draw_detection(frame_bgr: np.ndarray, det: dict, mask01: Optional[np.ndarray
 
 
 def draw_yolo_evidence(frame_bgr: np.ndarray, det: dict, draw_centroid: bool = True):
+    """
+    Disegna bbox YOLO e opzionale centroide.
+    Usato per frame di evidenza/debug.
+    Ritorna un frame BGR annotato.
+    """
     x1, y1, x2, y2 = [int(v) for v in det["bbox_xyxy"]]
     cx, cy = det["centroid_px"]
     vis = frame_bgr.copy()
@@ -36,6 +46,11 @@ def draw_yolo_evidence(frame_bgr: np.ndarray, det: dict, draw_centroid: bool = T
 
 
 def draw_comparison(frame_bgr: np.ndarray, yolo_det: dict, vlm_bbox: List[float]):
+    """
+    Disegna confronto tra bbox YOLO e VLM.
+    Colora YOLO e VLM con colori distinti.
+    Ritorna un frame BGR annotato.
+    """
     vis = frame_bgr.copy()
     yx1, yy1, yx2, yy2 = [int(v) for v in yolo_det["bbox_xyxy"]]
     cv2.rectangle(vis, (yx1, yy1), (yx2, yy2), (0, 255, 255), 2)
@@ -47,6 +62,11 @@ def draw_comparison(frame_bgr: np.ndarray, yolo_det: dict, vlm_bbox: List[float]
 
 
 def draw_vlm_bbox(frame_bgr: np.ndarray, vlm_bbox: List[float], label: str = "VLM"):
+    """
+    Disegna una bbox VLM con etichetta.
+    Usa colore dedicato per il modello VLM.
+    Ritorna un frame BGR annotato.
+    """
     vis = frame_bgr.copy()
     x1, y1, x2, y2 = [int(v) for v in vlm_bbox]
     cv2.rectangle(vis, (x1, y1), (x2, y2), (255, 0, 255), 2)
@@ -55,9 +75,39 @@ def draw_vlm_bbox(frame_bgr: np.ndarray, vlm_bbox: List[float], label: str = "VL
 
 
 def draw_vlm_not_visible(frame_bgr: np.ndarray, message: str = "VLM NOT_VISIBLE"):
+    """
+    Aggiunge un messaggio NOT_VISIBLE sul frame.
+    Disegna testo con bordo per leggibilita.
+    Ritorna un frame BGR annotato.
+    """
     vis = frame_bgr.copy()
     cv2.putText(vis, message, (12, 32), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 4)
     cv2.putText(vis, message, (12, 32), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 255), 2)
+    return vis
+
+
+def draw_probe_overlay(frame_bgr: np.ndarray, target_label: str, probe: Dict):
+    """
+    Sovrappone informazioni di probe sul frame.
+    Mostra visibilita, location e oggetti correlati.
+    Ritorna un frame BGR annotato.
+    """
+    vis = frame_bgr.copy()
+    visible = probe.get("target_visible")
+    visibility = probe.get("target_visibility", "unknown")
+    location = probe.get("target_location_hint", "unknown")
+    confidence = probe.get("confidence", 0)
+    status = "YES" if visible else "NO"
+    lines = [
+        f"probe target={target_label} visible={status} conf={int(confidence)}",
+        f"visibility={visibility} location={location}",
+        "related: " + ", ".join(probe.get("related_objects", [])[:5]),
+    ]
+    y = 24
+    for line in lines:
+        cv2.putText(vis, line, (12, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 4)
+        cv2.putText(vis, line, (12, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 1)
+        y += 24
     return vis
 
 
@@ -68,6 +118,11 @@ def annotate_telemetry(
     sensor: Dict,
     mem_summary: Dict,
 ) -> np.ndarray:
+    """
+    Annota telemetria di step sul frame.
+    Mostra azione, collisione, coverage e distanze.
+    Ritorna un frame BGR annotato.
+    """
     vis = frame_bgr.copy()
     action_txt = format_action_spec(action_spec)
     cell = mem_summary.get("pose_discrete", {}).get("cell", {})

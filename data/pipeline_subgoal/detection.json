@@ -1,0 +1,46 @@
+{
+  "goal": "Cercami la mela",
+  "scene": "FloorPlan1",
+  "target_type": "apple",
+  "step": 4,
+  "time": 1767623146.1843235,
+  "reason": "vlm_conf_0.70",
+  "detection": {
+    "label": "apple",
+    "score": 0.7276909351348877,
+    "bbox_xyxy": [
+      235.71612548828125,
+      359.6842956542969,
+      270.20843505859375,
+      401.3773498535156
+    ],
+    "centroid_px": [
+      252,
+      378
+    ],
+    "has_mask": true
+  },
+  "detections": [
+    {
+      "class": "apple",
+      "bbox": [
+        235.71612548828125,
+        359.6842956542969,
+        270.20843505859375,
+        401.3773498535156
+      ],
+      "confidence": 0.7276909351348877,
+      "centroid": [
+        252,
+        378
+      ]
+    }
+  ],
+  "yolo_bbox_frame": "/home/cogix/TirocinioV2/data/pipeline_subgoal/frames/yolo_evidence_step_0004.png",
+  "yolo_mask_frame": "/home/cogix/TirocinioV2/data/pipeline_subgoal/frames/yolo_mask_step_0004.png",
+  "vlm_bbox": "NOT_VISIBLE",
+  "vlm_raw": "user\nTask: Bounding-box annotation. You are given an RGB frame from AI2-THOR and a target object class: apple. Provide a single bounding box tightly enclosing the target object. Output must be in pixel coordinates relative to the image: {x1, y1, x2, y2} with 0 <= x1 < x2 <= width and 0 <= y1 < y2 <= height. If the object is not visible, output NOT_VISIBLE.\n\n\n\n\n\nTarget: apple\nmodel\n{114, 242, 166, 312}",
+  "vlm_bbox_frame": "/home/cogix/TirocinioV2/data/pipeline_subgoal/frames/vlm_bbox_step_0004.png",
+  "iou_score": 0.0,
+  "test_result": "FAIL"
+}

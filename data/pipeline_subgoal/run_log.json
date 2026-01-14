@@ -1,0 +1,284 @@
+[
+  {
+    "step": 0,
+    "subgoal": "1",
+    "action": {
+      "action": "RotateRight",
+      "degrees": 60
+    },
+    "action_meta": {
+      "source": "macro",
+      "overrides": []
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "robot_state": {
+      "dist_front_m": 1.5763496160507202,
+      "dist_left_m": 0.6265873908996582,
+      "dist_right_m": 1.1458766460418701,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 330.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 0
+      },
+      "visited": true,
+      "coverage_pct": 33.3,
+      "coverage_ratio": 0.333,
+      "view_dirs": [
+        0,
+        4
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 0,
+          "free_m": 1.58,
+          "unvisited": true,
+          "novelty": 2.45
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 1.15,
+          "unvisited": true,
+          "novelty": 2.24
+        },
+        {
+          "dir_idx": 2,
+          "free_m": 1.15,
+          "unvisited": true,
+          "novelty": 2.24
+        }
+      ],
+      "novelty_score": 2.45
+    }
+  },
+  {
+    "step": 1,
+    "subgoal": "1",
+    "action": {
+      "action": "RotateRight",
+      "degrees": 60
+    },
+    "action_meta": {
+      "source": "macro",
+      "overrides": []
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "robot_state": {
+      "dist_front_m": 1.6659797430038452,
+      "dist_left_m": 1.1479072570800781,
+      "dist_right_m": 2.532761573791504,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 30.000001907348633,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 1
+      },
+      "visited": true,
+      "coverage_pct": 50.0,
+      "coverage_ratio": 0.5,
+      "view_dirs": [
+        0,
+        1,
+        4
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 2,
+          "free_m": 2.53,
+          "unvisited": true,
+          "novelty": 2.5
+        },
+        {
+          "dir_idx": 3,
+          "free_m": 2.53,
+          "unvisited": true,
+          "novelty": 2.5
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 2.53,
+          "unvisited": true,
+          "novelty": 2.5
+        }
+      ],
+      "novelty_score": 2.5
+    }
+  },
+  {
+    "step": 2,
+    "subgoal": "1",
+    "action": {
+      "action": "RotateRight",
+      "degrees": 60
+    },
+    "action_meta": {
+      "source": "macro",
+      "overrides": []
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "robot_state": {
+      "dist_front_m": 3.3190789222717285,
+      "dist_left_m": 1.9813237190246582,
+      "dist_right_m": 3.3284294605255127,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 90.0,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 2
+      },
+      "visited": true,
+      "coverage_pct": 66.7,
+      "coverage_ratio": 0.667,
+      "view_dirs": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 3,
+          "free_m": 3.33,
+          "unvisited": true,
+          "novelty": 2.33
+        },
+        {
+          "dir_idx": 4,
+          "free_m": 3.33,
+          "unvisited": true,
+          "novelty": 2.33
+        },
+        {
+          "dir_idx": 5,
+          "free_m": 3.33,
+          "unvisited": true,
+          "novelty": 2.33
+        }
+      ],
+      "novelty_score": 2.33
+    }
+  },
+  {
+    "step": 3,
+    "subgoal": "1",
+    "action": {
+      "action": "RotateRight",
+      "degrees": 60
+    },
+    "action_meta": {
+      "source": "macro",
+      "overrides": []
+    },
+    "vlm": {
+      "raw": null,
+      "target_confidence": 0.0,
+      "request_yolo": false,
+      "reason": ""
+    },
+    "robot_state": {
+      "dist_front_m": 3.917091131210327,
+      "dist_left_m": 2.994123935699463,
+      "dist_right_m": 2.8407933712005615,
+      "collision": false,
+      "last_action_success": true,
+      "position": {
+        "x": -1.0,
+        "y": 0.900999128818512,
+        "z": 1.0
+      },
+      "yaw": 150.00001525878906,
+      "horizon": 0.0
+    },
+    "memory": {
+      "pose_discrete": {
+        "cell": {
+          "x": -2,
+          "z": 2
+        },
+        "dir_idx": 3
+      },
+      "visited": true,
+      "coverage_pct": 83.3,
+      "coverage_ratio": 0.833,
+      "view_dirs": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "ranked_directions": [
+        {
+          "dir_idx": 3,
+          "free_m": 3.92,
+          "unvisited": true,
+          "novelty": 2.17
+        },
+        {
+          "dir_idx": 0,
+          "free_m": 2.99,
+          "unvisited": true,
+          "novelty": 2.17
+        },
+        {
+          "dir_idx": 1,
+          "free_m": 2.99,
+          "unvisited": true,
+          "novelty": 2.17
+        }
+      ],
+      "novelty_score": 2.17
+    }
+  }
+]

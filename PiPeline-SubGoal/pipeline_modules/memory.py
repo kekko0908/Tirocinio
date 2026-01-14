@@ -5,42 +5,82 @@ from typing import Dict, Tuple
 
 class ExplorationMemory:
     def __init__(self, cell_size: float = 0.5, dir_bins: int = 8):
+        """
+        Inizializza la memoria di esplorazione discreta.
+        Imposta dimensione cella e numero di direzioni.
+        Prepara la mappa delle celle visitate.
+        """
         self.cell_size = float(cell_size)
         self.dir_bins = int(dir_bins)
         self.cells: Dict[Tuple[int, int], Dict] = {}
 
     def cell_key(self, pos: Dict) -> Tuple[int, int]:
+        """
+        Converte una posizione continua in chiave di cella.
+        Quantizza x e z usando la dimensione della cella.
+        Ritorna una tupla (ix, iz).
+        """
         x = float(pos.get("x", 0.0))
         z = float(pos.get("z", 0.0))
         return (int(round(x / self.cell_size)), int(round(z / self.cell_size)))
 
     def dir_idx(self, yaw: float) -> int:
+        """
+        Converte uno yaw in indice di direzione discreto.
+        Divide i 360 gradi in bin uniformi.
+        Ritorna l'indice modulo dir_bins.
+        """
         step = 360.0 / float(self.dir_bins)
         return int(round(yaw / step)) % self.dir_bins
 
     def dir_vector(self, dir_idx: int) -> Tuple[int, int]:
+        """
+        Restituisce il vettore discreto per un indice di direzione.
+        Calcola sin/cos e arrotonda a interi.
+        Ritorna (dx, dz) per spostamento cella.
+        """
         angle = math.radians(dir_idx * (360.0 / self.dir_bins))
         dx = int(round(math.sin(angle)))
         dz = int(round(math.cos(angle)))
         return dx, dz
 
     def neighbor_key(self, key: Tuple[int, int], dir_idx: int) -> Tuple[int, int]:
+        """
+        Calcola la chiave della cella adiacente.
+        Usa il vettore direzionale per lo spostamento.
+        Ritorna la nuova chiave (ix, iz).
+        """
         dx, dz = self.dir_vector(dir_idx)
         return (key[0] + dx, key[1] + dz)
 
     def update(self, pos: Dict, yaw: float) -> None:
+        """
+        Aggiorna la memoria con posizione e yaw correnti.
+        Incrementa visite e memorizza direzioni viste.
+        Crea la cella se non esiste.
+        """
         key = self.cell_key(pos)
         cell = self.cells.setdefault(key, {"visited": 0, "dirs": set()})
         cell["visited"] += 1
         cell["dirs"].add(self.dir_idx(yaw))
 
     def coverage_ratio(self, key: Tuple[int, int]) -> float:
+        """
+        Calcola la copertura di direzioni in una cella.
+        Conta direzioni osservate rispetto ai bin totali.
+        Ritorna un valore tra 0 e 1.
+        """
         cell = self.cells.get(key)
         if not cell:
             return 0.0
         return float(len(cell["dirs"])) / float(self.dir_bins)
 
     def estimate_free_m(self, sensor: Dict, dir_idx: int, current_dir: int) -> float:
+        """
+        Stima la distanza libera nella direzione richiesta.
+        Combina distanze frontali, laterali e posteriori.
+        Ritorna metri stimati per dir_idx.
+        """
         front = float(sensor.get("dist_front_m", 1.0))
         left = float(sensor.get("dist_left_m", 1.0))
         right = float(sensor.get("dist_right_m", 1.0))
@@ -67,6 +107,11 @@ class ExplorationMemory:
         return front
 
     def summarize(self, pos: Dict, yaw: float, sensor: Dict) -> Dict:
+        """
+        Costruisce un riepilogo locale per il decision making.
+        Calcola coverage, novelty e ranking direzioni.
+        Ritorna un dict con pose discreta e metriche.
+        """
         key = self.cell_key(pos)
         visited = key in self.cells
         coverage_ratio = self.coverage_ratio(key)
