@@ -1,0 +1,311 @@
+{
+  "version": 1,
+  "scenes": {
+    "FloorPlan1": {
+      "Bowl": {
+        "stats": {
+          "runs": 12,
+          "success": 0,
+          "no_progress": 35,
+          "action_failures": {
+            "MoveRight": 13,
+            "MoveBack": 1,
+            "MoveAhead": 15,
+            "MoveLeft": 98
+          },
+          "avoid_zones": {
+            "-1.00,1.00,120": 6,
+            "-1.00,-1.00,60": 5,
+            "-1.00,-1.00,0": 10,
+            "-1.00,-0.50,0": 4,
+            "-1.00,-0.50,60": 1,
+            "-1.00,0.00,60": 5,
+            "-1.00,-0.50,120": 1,
+            "-1.00,0.00,120": 3,
+            "0.00,2.00,120": 67,
+            "0.00,2.00,180": 40,
+            "-1.00,1.00,180": 20
+          }
+        },
+        "recent_failures": [
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 5,
+            "ts": 1768571252.1448312,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 6,
+            "ts": 1768571256.878473,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 7,
+            "ts": 1768571261.618706,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 7,
+            "ts": 1768571262.628813,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "no_progress",
+            "step": 8,
+            "ts": 1768571262.6299753,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 8,
+            "ts": 1768571281.1546085,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 9,
+            "ts": 1768571286.4018264,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 10,
+            "ts": 1768571291.6802168,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 10,
+            "ts": 1768571292.6902812,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "no_progress",
+            "step": 11,
+            "ts": 1768571292.6908507,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveAhead",
+            "reason": "no_progress_or_fail",
+            "step": 2,
+            "ts": 1768572822.560051,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 135.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveAhead",
+            "reason": "no_progress_or_fail",
+            "step": 2,
+            "ts": 1768573186.0335803,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 135.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveAhead",
+            "reason": "no_progress_or_fail",
+            "step": 2,
+            "ts": 1768573794.003594,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 135.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveAhead",
+            "reason": "no_progress_or_fail",
+            "step": 2,
+            "ts": 1768574061.026513,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 135.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 3,
+            "ts": 1768574909.0908954,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 4,
+            "ts": 1768574914.5908818,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 4,
+            "ts": 1768574915.6010456,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "no_progress",
+            "step": 5,
+            "ts": 1768574915.6016335,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 5,
+            "ts": 1768575033.2586725,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          },
+          {
+            "event": "action_fail",
+            "action": "MoveLeft",
+            "reason": "no_progress_or_fail",
+            "step": 6,
+            "ts": 1768575038.7841816,
+            "position": {
+              "x": -0.75,
+              "y": 0.900999128818512,
+              "z": 1.25
+            },
+            "yaw": 195.0
+          }
+        ]
+      },
+      "Apple": {
+        "stats": {
+          "runs": 3,
+          "success": 1,
+          "no_progress": 0,
+          "action_failures": {},
+          "avoid_zones": {}
+        },
+        "recent_failures": [
+          {
+            "event": "success",
+            "step": 9,
+            "ts": 1768567506.3719423,
+            "position": {
+              "x": -1.0,
+              "y": 0.900999128818512,
+              "z": 0.75
+            },
+            "yaw": 99.99998474121094
+          }
+        ]
+      }
+    }
+  }
+}

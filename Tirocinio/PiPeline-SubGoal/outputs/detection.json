@@ -1,0 +1,51 @@
+{
+  "goal": "Cercami la ciotola",
+  "scene": "FloorPlan1",
+  "target_type": "Bowl",
+  "step": 6,
+  "time": 1768575035.9443507,
+  "reason": "probe_positive",
+  "detection": {
+    "label": "bowl",
+    "score": 0.4984228312969208,
+    "bbox_xyxy": [
+      83.07942199707031,
+      292.3871765136719,
+      121.29252624511719,
+      310.1345520019531
+    ],
+    "centroid_px": [
+      100,
+      301
+    ],
+    "has_mask": true
+  },
+  "detections": [
+    {
+      "class": "bowl",
+      "bbox": [
+        83.07942199707031,
+        292.3871765136719,
+        121.29252624511719,
+        310.1345520019531
+      ],
+      "confidence": 0.4984228312969208,
+      "centroid": [
+        100,
+        301
+      ]
+    }
+  ],
+  "yolo_bbox_frame": null,
+  "yolo_mask_frame": null,
+  "vlm_bbox": "NOT_VISIBLE",
+  "vlm_raw": "system\nTask: Bounding-box annotation. You are given an RGB frame from AI2-THOR and a target object class: Bowl. Provide a single bounding box tightly enclosing the target object. Output must be in pixel coordinates relative to the image: {x1, y1, x2, y2} with 0 <= x1 < x2 <= width and 0 <= y1 < y2 <= height. If the object is not visible, output NOT_VISIBLE.\nuser\nTarget: Bowl\nassistant\n{0.28, 0.62, 0.34, 0.66}",
+  "iou_score": 0.0,
+  "test_result": "FAIL",
+  "world_position": {
+    "x": -0.11073083747014734,
+    "y": 0.900999128818512,
+    "z": -0.5543873644545245
+  },
+  "world_source": "depth"
+}

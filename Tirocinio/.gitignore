@@ -1,0 +1,44 @@
+@"
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.env.*
+
+# =========================
+# ML / AI models
+# =========================
+*.pt
+*.pth
+*.onnx
+*.h5
+*.ckpt
+
+# =========================
+# Data / cache
+# =========================
+*.npy
+*.npz
+*.pickle
+*.pkl
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Logs
+# =========================
+*.log
+"@ | Out-File -Encoding utf8 .gitignore

@@ -1,0 +1,166 @@
+{
+  "FloorPlan1": {
+    "Apple": {
+      "count": 45,
+      "mean_position": {
+        "x": -0.4651656601164076,
+        "y": 1.151225209236145,
+        "z": 0.47580010096232095
+      },
+      "last_position": {
+        "x": -0.46516576409339905,
+        "y": 1.151225209236145,
+        "z": 0.47580063343048096
+      },
+      "last_seen_step": 9,
+      "last_seen_episode": "1768567480",
+      "last_confidence": 0.7375330924987793,
+      "action_traces": [
+        {
+          "episode_id": "1768500269",
+          "start_step": 0,
+          "end_step": 9,
+          "success": true,
+          "mode": "global",
+          "reference": null,
+          "actions": [
+            {
+              "step": 0,
+              "state": "EXPLORE",
+              "action": "RotateLeft",
+              "degrees": 45
+            },
+            {
+              "step": 1,
+              "state": "SEARCH",
+              "action": "RotateLeft",
+              "degrees": 45
+            },
+            {
+              "step": 2,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 3,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 4,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 5,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 6,
+              "state": "APPROACH",
+              "action": "MoveRight",
+              "moveMagnitude": 0.25
+            },
+            {
+              "step": 7,
+              "state": "APPROACH",
+              "action": "RotateLeft",
+              "degrees": 5
+            },
+            {
+              "step": 8,
+              "state": "LOCALIZE",
+              "action": "RotateLeft",
+              "degrees": 5
+            }
+          ]
+        },
+        {
+          "episode_id": "1768567480",
+          "start_step": 0,
+          "end_step": 9,
+          "success": true,
+          "mode": "global",
+          "reference": null,
+          "actions": [
+            {
+              "step": 0,
+              "state": "EXPLORE",
+              "action": "RotateLeft",
+              "degrees": 45
+            },
+            {
+              "step": 1,
+              "state": "SEARCH",
+              "action": "RotateLeft",
+              "degrees": 45
+            },
+            {
+              "step": 2,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 3,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 4,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 5,
+              "state": "APPROACH",
+              "action": "RotateRight",
+              "degrees": 5
+            },
+            {
+              "step": 6,
+              "state": "APPROACH",
+              "action": "MoveRight",
+              "moveMagnitude": 0.25
+            },
+            {
+              "step": 7,
+              "state": "APPROACH",
+              "action": "RotateLeft",
+              "degrees": 5
+            },
+            {
+              "step": 8,
+              "state": "LOCALIZE",
+              "action": "RotateLeft",
+              "degrees": 5
+            }
+          ]
+        }
+      ]
+    },
+    "Bowl": {
+      "count": 334,
+      "mean_position": {
+        "x": 0.24587350824834606,
+        "y": 0.9159727926382761,
+        "z": -0.5099815554755548
+      },
+      "last_position": {
+        "x": -0.11073083747014734,
+        "y": 0.900999128818512,
+        "z": -0.5543873644545245
+      },
+      "last_seen_step": 6,
+      "last_seen_episode": "1768574873",
+      "last_confidence": 0.4984228312969208
+    }
+  }
+}

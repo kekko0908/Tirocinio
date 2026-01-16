@@ -1,0 +1,26 @@
+{
+  "scene_id": "FloorPlan1",
+  "episode_id": "1768234644",
+  "targets": {
+    "Bowl": {
+      "last_seen_hint": "left",
+      "last_seen_step": 7,
+      "last_seen_source": "probe",
+      "last_seen_centroid_px": [
+        100,
+        301
+      ],
+      "last_nav_route": "right",
+      "last_nav_rationale": "The robot has a clear path to the target from multiple angles, prioritizing left, right, front, and back approaches to ensure the target is visible or re-acquirable."
+    },
+    "Apple": {
+      "last_seen_hint": "center",
+      "last_seen_step": 8,
+      "last_seen_source": "yolo",
+      "last_seen_centroid_px": [
+        370,
+        411
+      ]
+    }
+  }
+}

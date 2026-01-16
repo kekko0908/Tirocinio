@@ -1,0 +1,12 @@
+\chapter*{Sommario}
+\addcontentsline{toc}{chapter}{Sommario}
+\label{ch:sommario}
+
+Questa tesi affronta il problema dell'integrazione tra object detection e Vision--Language Models (VLM) in un contesto di robotica indoor simulata, con l'obiettivo di studiare un flusso end-to-end che, a partire da una richiesta in linguaggio naturale, consenta di localizzare un oggetto target e, quando previsto, supportare una fase di manipolazione. Il lavoro si colloca in uno scenario in cui l'agente opera in un ciclo percezione--decisione--azione, gestendo osservabilit\`a parziale, errori di percezione e fallimenti dell'azione.
+
+L'approccio proposto combina un modulo di object detection basato su YOLO, impiegato per ottenere localizzazioni esplicite del target (bounding box e, se disponibile, segmentazione), con un modulo VLM utilizzato per supportare la pianificazione di sotto-obiettivi e la scelta delle azioni durante l'esplorazione e l'avvicinamento. A completamento, vengono introdotti meccanismi a supporto della stabilit\`a del comportamento, includendo strategie di esplorazione, memoria e regole di safety per ridurre oscillazioni e situazioni di stallo.
+
+La valutazione sperimentale considera sia il comportamento end-to-end della pipeline sia un confronto tra localizzazione ottenuta con YOLO e stime derivabili dal VLM, mediante metriche di sovrapposizione e misure di efficienza, con analisi dei casi di successo e delle principali modalit\`a di errore.
+
+\section*{Parole chiave}
+Object Detection, YOLO, Vision--Language Models, Embodied AI, simulazione robotica, manipolazione robotica, AI2-THOR.

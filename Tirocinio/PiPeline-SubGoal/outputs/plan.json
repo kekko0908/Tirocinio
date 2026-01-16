@@ -1,0 +1,21 @@
+{
+  "goal": "Cercami la ciotola",
+  "targets": [
+    {
+      "label": "Bowl",
+      "mode": "global"
+    }
+  ],
+  "near_relation": null,
+  "states": [
+    "SELECT_TARGET",
+    "EXPLORE",
+    "SEARCH",
+    "SEARCH_NEAR",
+    "NAVIGATE",
+    "APPROACH",
+    "LOCALIZE",
+    "DONE",
+    "FAIL"
+  ]
+}
