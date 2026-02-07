@@ -64,6 +64,10 @@ class YoloSegEngine:
         resolved_path = _resolve_model_path(model_path)
         print(f"[YOLO-17] Richiesto modello: {model_path}")
         print(f"[YOLO-17] Path risolto: {resolved_path}")
+        # Se impostato (es. YOLO_DEVICE=cpu), forza il device di inferenza Ultralytics.
+        self.device = os.environ.get("YOLO_DEVICE", "").strip()
+        if self.device:
+            print(f"[YOLO-17] Device forzato: {self.device}")
         
         # Controllo se il file esiste localmente
         if os.path.exists(resolved_path):
@@ -86,7 +90,7 @@ class YoloSegEngine:
             print("="*60 + "\n")
             raise e # Blocca tutto, non passare a v8
 
-    def analyze(self, source, target_label="apple", conf=0.10):
+    def analyze(self, source, target_label="apple", conf=0.20):
         # Recupera sinonimi
         valid_labels = THOR_TO_YOLO_MAP.get(target_label, [target_label.lower()])
         if target_label.lower() not in valid_labels:
@@ -105,7 +109,15 @@ class YoloSegEngine:
             img_debug = source
 
         # Inferenza
-        results = self.model.predict(source=inference_source, conf=conf, imgsz=640, verbose=False)
+        predict_kwargs = {
+            "source": inference_source,
+            "conf": conf,
+            "imgsz": 640,
+            "verbose": False,
+        }
+        if self.device:
+            predict_kwargs["device"] = self.device
+        results = self.model.predict(**predict_kwargs)
         
         if not results: return None, "No results"
         res0 = results[0]

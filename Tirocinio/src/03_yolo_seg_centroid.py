@@ -10,6 +10,7 @@ from common import (
     save_json,
 )
 import argparse
+from pathlib import Path
 import numpy as np
 import cv2
 
@@ -57,48 +58,79 @@ def pick_detection_idx(result, target_label: str):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="yolov8n-seg.pt", help="Path/preset (es. yolov8n-seg.pt o data/models/yolo-seg.pt)")
+    ap.add_argument("--model", default="yolo26x-seg.pt", help="Path/preset (es. yolov8n-seg.pt o data/models/yolo-seg.pt)")
     ap.add_argument("--conf", type=float, default=0.25)
     ap.add_argument("--pred_conf_min", type=float, default=0.05, help="Conf minima usata per la predizione (per non perdere target piccoli).")
     ap.add_argument("--imgsz", type=int, default=640)
     ap.add_argument("--target", default="", help="Label YOLO da cercare (default: objectType da teleport_state).")
+    ap.add_argument("--image", default="", help="Percorso immagine input (salta AI2-THOR e usa il frame indicato).")
     ap.add_argument("--oracle_assist", action="store_true", help="Se attivo, usa instance_masks di THOR per fallback/validazione quando YOLO sbaglia.")
     ap.add_argument("--max_detections", type=int, default=20, help="Quante detections salvare nel json (debug).")
     ap.add_argument("--out_state", default="centroid_state.json", help="Output in data/state/")
     ap.add_argument("--debug_name", default="03_yolo_centroid.png", help="Output debug in data/outputs/")
+    ap.add_argument(
+        "--out_dir",
+        default="Richiesta 1/Artefatti/yolo_outputs/03_seg",
+        help="Directory output PNG (default: Richiesta 1/Artefatti/yolo_outputs/03_seg)",
+    )
     args = ap.parse_args()
 
-    tele = load_json("teleport_state.json")
-    scene = tele["scene"]
-    target_id = tele["target"]["objectId"]
-    target_type = tele["target"]["objectType"]
-    agent_pos = tele["agent"]["position"]
-    agent_rot = tele["agent"]["rotation"]
-    horizon = tele["agent"]["horizon"]
+    use_input_image = bool(args.image.strip())
+    if use_input_image and args.oracle_assist:
+        print_warn("oracle_assist disattivato: con --image non ci sono instance_masks di THOR.")
+        args.oracle_assist = False
+
+    tele = {}
+    if use_input_image:
+        try:
+            tele = load_json("teleport_state.json")
+        except Exception:
+            tele = {}
+    else:
+        tele = load_json("teleport_state.json")
+
+    scene = tele.get("scene", "unknown")
+    target_id = tele.get("target", {}).get("objectId")
+    target_type = tele.get("target", {}).get("objectType", "")
+    agent_pos = tele.get("agent", {}).get("position")
+    agent_rot = tele.get("agent", {}).get("rotation")
+    horizon = tele.get("agent", {}).get("horizon")
 
     target_label = args.target.strip() or str(target_type).lower()
     target_label = target_label.lower()
 
-    cfg = EnvConfig(scene=scene, render_depth=False, render_instance_segmentation=bool(args.oracle_assist))
-    controller = make_controller(cfg)
-    controller.step(action="Teleport", position=agent_pos, rotation=agent_rot, horizon=horizon)
-    event = controller.last_event
-
-    rgb_bgr = get_rgb_bgr(event)
-    # Salva sempre un frame standard per i passi successivi (VLM/debug)
-    try:
-        save_rgb(rgb_bgr, "02_teleport_rgb.png")
-    except Exception:
-        pass
+    controller = None
     oracle_mask01 = None
     oracle_centroid = None
     oracle_bbox = None
-    if args.oracle_assist and getattr(event, "instance_masks", None) is not None:
-        masks = event.instance_masks
-        if isinstance(masks, dict) and target_id in masks:
-            oracle_mask01 = masks[target_id].astype(np.float32)
-            oracle_centroid = centroid_from_mask(oracle_mask01)
-            oracle_bbox = bbox_from_mask(oracle_mask01)
+    frame_for_yolo = None
+
+    if use_input_image:
+        rgb_bgr = cv2.imread(args.image)
+        if rgb_bgr is None:
+            print_warn(f"Immagine non letta: {args.image}")
+            return
+        frame_for_yolo = cv2.cvtColor(rgb_bgr, cv2.COLOR_BGR2RGB)
+    else:
+        cfg = EnvConfig(scene=scene, render_depth=False, render_instance_segmentation=bool(args.oracle_assist))
+        controller = make_controller(cfg)
+        controller.step(action="Teleport", position=agent_pos, rotation=agent_rot, horizon=horizon)
+        event = controller.last_event
+
+        rgb_bgr = get_rgb_bgr(event)
+        frame_for_yolo = event.frame
+        # Salva sempre un frame standard per i passi successivi (VLM/debug)
+        try:
+            save_rgb(rgb_bgr, "02_teleport_rgb.png")
+        except Exception:
+            pass
+
+        if args.oracle_assist and getattr(event, "instance_masks", None) is not None:
+            masks = event.instance_masks
+            if isinstance(masks, dict) and target_id in masks:
+                oracle_mask01 = masks[target_id].astype(np.float32)
+                oracle_centroid = centroid_from_mask(oracle_mask01)
+                oracle_bbox = bbox_from_mask(oracle_mask01)
 
     try:
         from ultralytics import YOLO
@@ -111,17 +143,19 @@ def main():
     model = YOLO(args.model)
     # Per target piccoli (es. Apple) conviene predire con conf piu' bassa e filtrare dopo.
     pred_conf = min(float(args.conf), float(args.pred_conf_min))
-    results = model.predict(source=event.frame, conf=pred_conf, imgsz=int(args.imgsz), verbose=False)
+    results = model.predict(source=frame_for_yolo, conf=pred_conf, imgsz=int(args.imgsz), verbose=False)
     if not results:
         print_warn("YOLO non ha restituito risultati.")
-        controller.stop()
+        if controller is not None:
+            controller.stop()
         return
 
     res0 = results[0]
     boxes = res0.boxes
     if boxes is None or boxes.cls is None or len(boxes) == 0:
         print_warn("Nessuna detection trovata (boxes vuote).")
-        controller.stop()
+        if controller is not None:
+            controller.stop()
         return
 
     xyxy = boxes.xyxy.detach().cpu().numpy().astype(float)
@@ -249,7 +283,9 @@ def main():
         cv2.LINE_AA,
     )
 
-    out_img = data_dir("outputs") / args.debug_name
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_img = out_dir / args.debug_name
     cv2.imwrite(str(out_img), overlay)
 
     # state json (manteniamo compatibilita' con src/04_pregrasp_point.py)
@@ -294,7 +330,8 @@ def main():
     print_ok(f"Debug: {out_img}")
     print_ok(f"Salvato: data/state/{args.out_state}")
 
-    controller.stop()
+    if controller is not None:
+        controller.stop()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from common import EnvConfig, make_controller, print_ok
 
 def main():
-    controller = make_controller(EnvConfig(scene="FloorPlan1"))
+    controller = make_controller(EnvConfig(scene="FloorPlan7"))
     event = controller.step("GetReachablePositions")  # non obbligatorio, ma utile
 
     meta = controller.last_event.metadata

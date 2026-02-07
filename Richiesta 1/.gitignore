@@ -1,0 +1,47 @@
+@"
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.gguf
+.modelli_gguf
+.MODELLI YOLO
+# Virtual environments
+venv/
+.env/
+.env.*
+
+# =========================
+# ML / AI models
+# =========================
+*.pt
+*.pth
+*.onnx
+*.h5
+*.ckpt
+
+# =========================
+# Data / cache
+# =========================
+*.npy
+*.npz
+*.pickle
+*.pkl
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+yolo11x-seg.pt
+
+# =========================
+# Logs
+# =========================
+*.log
+"@ | Out-File -Encoding utf8 .gitignore

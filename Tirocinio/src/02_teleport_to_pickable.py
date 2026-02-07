@@ -32,7 +32,7 @@ def teleport_face_object(controller, target_pos, obj_pos, horizon=20):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--scene", default="FloorPlan1")
+    ap.add_argument("--scene", default="FloorPlan7")
     ap.add_argument("--target_type", default="", help="Se vuoto sceglie il primo pickable visibile.")
     ap.add_argument("--max_pickables", type=int, default=50)
     ap.add_argument("--horizon", type=float, default=20.0)
@@ -44,6 +44,7 @@ def main():
     controller = make_controller(EnvConfig(scene=scene))
 
     meta = controller.last_event.metadata
+
     objects = meta.get("objects", [])
     pickable = [o for o in objects if o.get("pickupable", False)]
     if not pickable:

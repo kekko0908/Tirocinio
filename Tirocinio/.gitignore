@@ -36,6 +36,7 @@ venv/
 Thumbs.db
 .vscode/
 .idea/
+yolo11x-seg.pt
 
 # =========================
 # Logs
