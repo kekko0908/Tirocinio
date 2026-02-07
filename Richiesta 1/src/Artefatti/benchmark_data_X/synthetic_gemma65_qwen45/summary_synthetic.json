@@ -1,0 +1,22 @@
+[
+  {
+    "model_alias": "qwen-vl2.5",
+    "runs_total": 30,
+    "target_within_0_5m_pct": 46.67,
+    "success_pct": 46.67,
+    "decision_quality_mean": 80.009,
+    "decision_quality_median": 81.195,
+    "delta_success_rate_m_mean": 1.6559,
+    "delta_success_rate_m_median": 1.6123
+  },
+  {
+    "model_alias": "gemma-3",
+    "runs_total": 30,
+    "target_within_0_5m_pct": 70.0,
+    "success_pct": 66.67,
+    "decision_quality_mean": 93.167,
+    "decision_quality_median": 93.27,
+    "delta_success_rate_m_mean": 1.8076,
+    "delta_success_rate_m_median": 1.8611
+  }
+]
